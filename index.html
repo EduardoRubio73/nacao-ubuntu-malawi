@@ -837,7 +837,7 @@ async function loadProgress() {
     var r2 = await sbSelect('configuracoes', 'select=valor&chave=eq.meta_valor&limit=1');
     if (!r1 || !r1[0] || !r2 || !r2[0]) return;
     var total = parseFloat(r1[0].total) || 0;
-    var meta  = parseFloat(r2[0].valor) || 50000;
+    var meta  = parseFloat(r2[0].valor) || 15000;
     var pct   = Math.min(100, (total / meta) * 100).toFixed(1);
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressTxt').textContent =

@@ -6,7 +6,6 @@
 <title>Admin · Nação Ubuntu Malawi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -289,12 +288,35 @@ tr:hover td{background:#fafafa}
 
 <script>
 // ── CONFIG ───────────────────────────────────────────────────────────────────
-const SUPABASE_URL  = 'https://hgsekgeijgklrategzew.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVgemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
-const ADMIN_PWD     = '123456';
+const SB_URL    = 'https://hgsekgeijgklrategzew.supabase.co';
+const SB_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVnemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
+const ADMIN_PWD = '123456';
 
-let sb = null;
-try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) {}
+const SB_HEADERS = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json'
+};
+
+async function sbQuery(path) {
+  const res = await fetch(SB_URL + '/rest/v1/' + path, { headers: SB_HEADERS });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function sbUpdate(table, id, payload) {
+  const res = await fetch(SB_URL + '/rest/v1/' + table + '?id=eq.' + id, {
+    method: 'PATCH',
+    headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+function getPublicUrl(filename) {
+  return SB_URL + '/storage/v1/object/public/comprovantes/' + filename;
+}
 
 let allDoacoes = [];
 let currentFilter = 'all';
@@ -337,18 +359,14 @@ function showTab(name) {
 
 // ── LOAD DATA ────────────────────────────────────────────────────────────────
 async function loadAll() {
-  if (!sb || SUPABASE_URL === 'SEU_SUPABASE_URL') {
-    renderMock(); return;
-  }
   try {
-    const { data } = await sb.from('doacoes').select('*').order('created_at',{ascending:false});
-    allDoacoes = data || [];
+    allDoacoes = await sbQuery('doacoes?select=*&order=created_at.desc');
     updateKPIs(allDoacoes);
     renderRecent(allDoacoes.slice(0,10));
     renderAll(allDoacoes);
     renderPend(allDoacoes.filter(d=>d.status==='pendente'));
     document.getElementById('lastUpdate').textContent = 'Atualizado: ' + new Date().toLocaleString('pt-BR');
-  } catch(e) { showToast('❌ Erro ao carregar dados'); }
+  } catch(e) { showToast('❌ Erro ao carregar dados: ' + e.message); }
 }
 
 function updateKPIs(data) {
@@ -357,7 +375,7 @@ function updateKPIs(data) {
   const total  = conf.reduce((s,d)=>s+parseFloat(d.valor||0),0);
   const pendV  = pend.reduce((s,d)=>s+parseFloat(d.valor||0),0);
   const medio  = conf.length ? total/conf.length : 0;
-  const meta   = 50000;
+  const meta   = 15000;
   const pct    = Math.min(100,(total/meta)*100).toFixed(1);
 
   document.getElementById('kpiTotal').textContent    = fmt(total);
@@ -455,14 +473,12 @@ function openModal(id) {
     <div class="modal-row"><strong>PIX TxID:</strong> <code>${r.pix_txid||'—'}</code></div>
   `;
   // Receipt
-  if (r.comprovante_url && sb) {
-    const { data } = sb.storage.from('comprovantes').getPublicUrl(r.comprovante_url);
-    const url = data?.publicUrl;
-    document.getElementById('modalReceipt').innerHTML = url
-      ? (url.match(/\.(jpg|jpeg|png|gif|webp)/i)
-          ? `<img class="receipt" src="${url}" alt="Comprovante">`
-          : `<a href="${url}" target="_blank" class="btn btn-primary" style="width:auto">📄 Abrir comprovante</a>`)
-      : '<p style="color:var(--muted);font-size:13px">Comprovante: ' + r.comprovante_nome + '</p>';
+  if (r.comprovante_url) {
+    const url = getPublicUrl(r.comprovante_url);
+    document.getElementById('modalReceipt').innerHTML =
+      url.match(/\.(jpg|jpeg|png|gif|webp)/i)
+        ? `<img class="receipt" src="${url}" alt="Comprovante">`
+        : `<a href="${url}" target="_blank" class="btn btn-primary" style="width:auto">📄 Abrir comprovante</a>`;
   } else {
     document.getElementById('modalReceipt').innerHTML = '<p style="color:var(--muted);font-size:13px">Sem comprovante</p>';
   }
@@ -480,18 +496,20 @@ function closeModal() { document.getElementById('modalOverlay').classList.remove
 
 // ── ACTIONS ──────────────────────────────────────────────────────────────────
 async function confirm_donation(id) {
-  if (!sb) return;
-  await sb.from('doacoes').update({status:'confirmado',confirmado_em:new Date().toISOString()}).eq('id',id);
-  showToast('✅ Doação confirmada!');
-  await loadAll();
+  try {
+    await sbUpdate('doacoes', id, {status:'confirmado', confirmado_em: new Date().toISOString()});
+    showToast('✅ Doação confirmada!');
+    await loadAll();
+  } catch(e) { showToast('❌ Erro: ' + e.message); }
 }
 
 async function cancel_donation(id) {
   if (!confirm('Cancelar esta doação?')) return;
-  if (!sb) return;
-  await sb.from('doacoes').update({status:'cancelado'}).eq('id',id);
-  showToast('❌ Doação cancelada');
-  await loadAll();
+  try {
+    await sbUpdate('doacoes', id, {status:'cancelado'});
+    showToast('❌ Doação cancelada');
+    await loadAll();
+  } catch(e) { showToast('❌ Erro: ' + e.message); }
 }
 
 // ── MOCK (sem Supabase) ───────────────────────────────────────────────────────
