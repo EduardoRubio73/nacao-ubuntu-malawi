@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS admin_log (
 INSERT INTO configuracoes (chave, valor) VALUES
   ('meta_valor',    '50000'),
   ('meta_label',    'Meta: R$ 50.000'),
-  ('pix_key',       'a25dcbcd-970a-4fb3-8b38-750998aa0792'),
-  ('pix_name',      'Carlos Eduardo Ximenes Ru'),
+  ('pix_key',       '06432680816'),
+  ('pix_name',      'Maria Izabel Moreno de So'),
   ('pix_city',      'SAO PAULO'),
   ('whatsapp_izabel','5515996016655'),
   ('campanha_ativa', 'true')

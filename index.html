@@ -160,9 +160,9 @@ nav{
 .amt-btn.selected{border-color:var(--purple);background:rgba(42,0,85,.05)}
 .amt-btn .amt-val{
   display:block;font-family:'Playfair Display',serif;font-size:22px;
-  font-weight:700;color:var(--purple);margin-bottom:2px;
+  font-weight:700;color:var(--purple);margin-bottom:2px;pointer-events:none;
 }
-.amt-btn .amt-label{font-size:11px;color:var(--muted)}
+.amt-btn .amt-label{font-size:11px;color:var(--muted);pointer-events:none}
 .amt-custom{display:flex;gap:8px;align-items:center;margin-bottom:24px}
 .amt-custom label{font-size:13px;font-weight:600;color:var(--purple);white-space:nowrap}
 .input{
@@ -411,7 +411,7 @@ footer .quote{font-style:italic;color:var(--gold)!important;margin-top:12px!impo
       <div class="step-panel" id="panel2">
         <div class="pix-box">
           <div class="pix-amount" id="displayAmt">R$ 0,00</div>
-          <div class="pix-to">Para: Carlos Eduardo Ximenes Rubio · Nação Ubuntu Malawi</div>
+          <div class="pix-to">Para: Maria Izabel Moreno de So · Nação Ubuntu Malawi</div>
           <div id="qrcode-container">
             <div id="qrcode"></div>
           </div>
@@ -538,10 +538,10 @@ footer .quote{font-style:italic;color:var(--gold)!important;margin-top:12px!impo
 // ── CONFIG ───────────────────────────────────────────────────────────────────
 const SUPABASE_URL  = 'https://hgsekgeijgklrategzew.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVnemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
-const PIX_KEY       = 'a25dcbcd-970a-4fb3-8b38-750998aa0792';
-const PIX_NAME      = 'Carlos Eduardo Ximenes Ru';
+const PIX_KEY       = '06432680816';
+const PIX_NAME      = 'Maria Izabel Moreno de So';
 const PIX_CITY      = 'SAO PAULO';
-const PIX_DESC      = 'obrigado por ajudar nesse projeto';
+const PIX_DESC      = '';
 
 let supabase = null;
 try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) {}
@@ -591,8 +591,10 @@ function buildPix(key, name, city, amount, desc, txid) {
 
 // ── AMOUNT SELECT ────────────────────────────────────────────────────────────
 function selectAmt(val, el) {
+  const btn = (el.closest && el.closest('.amt-btn')) || el;
   document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
+  btn.classList.add('selected');
+  el = btn;
   if (val === 0) {
     document.getElementById('customAmt').style.display = 'flex';
     document.getElementById('outroVal').textContent = 'Outro';
