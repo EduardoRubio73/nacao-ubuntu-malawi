@@ -282,13 +282,36 @@ footer .quote{font-style:italic;color:var(--gold)!important;margin-top:12px!impo
 /* Responsive */
 @media(max-width:768px){
   .hero-in{grid-template-columns:1fr;gap:32px}
-  .hero h1{font-size:38px}
+  .hero h1{font-size:36px}
   .hero-card{display:none}
-  .amounts-grid{grid-template-columns:repeat(2,1fr)}
+  .amounts-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .amt-btn{padding:16px 10px}
+  .amt-btn .amt-val{font-size:18px}
   .form-row{grid-template-columns:1fr}
   .contact-card{grid-template-columns:1fr}
-  .sec-title{font-size:30px}
+  .sec-title{font-size:28px}
+  .section{padding:52px 16px}
   .steps::before{display:none}
+  .pix-flow{padding:24px 16px}
+  .pix-amount{font-size:36px}
+  .pix-box{padding:22px 16px}
+  #qrcode-container{padding:12px}
+  .pix-code-val{font-size:9px}
+  .step span{font-size:10px}
+  .step-num{width:34px;height:34px;font-size:13px}
+  .success-box{padding:28px 12px}
+  .success-icon{font-size:56px}
+  .success-box h2{font-size:26px}
+}
+@media(max-width:480px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:15px}
+  .nav-logo span{font-size:14px}
+  .amounts-grid{grid-template-columns:1fr 1fr}
+  .pix-flow{padding:18px 14px}
+  .sec-title{font-size:24px}
+  .btn-next{font-size:14px;padding:14px}
+  .contact-card{padding:24px 20px}
 }
 </style>
 </head>
@@ -851,6 +874,19 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/public/sw.js').catch(function(){});
 }
 
+// ── CONFIG DINÂMICA ───────────────────────────────────────────────────────────
+async function loadConfig() {
+  try {
+    var rows = await sbSelect('configuracoes', 'select=chave,valor');
+    if (!rows) return;
+    var cfg = {};
+    rows.forEach(function(r){ cfg[r.chave] = r.valor; });
+    if (cfg.pix_key)  PIX_KEY  = cfg.pix_key;
+    if (cfg.pix_name) PIX_NAME = cfg.pix_name;
+    if (cfg.pix_city) PIX_CITY = cfg.pix_city;
+  } catch(e) {}
+}
+
 // ── PROGRESS ─────────────────────────────────────────────────────────────────
 async function loadProgress() {
   try {
@@ -868,6 +904,7 @@ async function loadProgress() {
     document.getElementById('progressWrap').style.display = 'block';
   } catch(e) {}
 }
+loadConfig();
 loadProgress();
 </script>
 </body>

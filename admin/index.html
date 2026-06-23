@@ -15,18 +15,21 @@
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-/* Login */
+/* ── LOGIN ── */
 #loginScreen{
   min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#1a003a,#2a0055);
+  background:linear-gradient(135deg,#1a003a,#2a0055);padding:20px;
 }
 .login-box{
-  background:#fff;border-radius:24px;padding:48px 40px;width:100%;max-width:380px;
+  background:#fff;border-radius:24px;padding:44px 36px;width:100%;max-width:380px;
   box-shadow:0 24px 60px rgba(0,0,0,.3);text-align:center;
 }
 .login-box img{width:72px;height:72px;border-radius:50%;object-fit:cover;margin-bottom:16px;background:#f0f0f0}
 .login-box h2{font-family:'Playfair Display',serif;font-size:24px;color:var(--purple);margin-bottom:4px}
 .login-box p{font-size:13px;color:var(--muted);margin-bottom:28px}
+.login-err{color:var(--red);font-size:13px;margin-top:8px;display:none}
+
+/* ── INPUTS & BUTTONS ── */
 .input{
   width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;
   font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;margin-bottom:12px;
@@ -34,128 +37,191 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .input:focus{border-color:var(--purple)}
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:12px 22px;border-radius:10px;font-weight:700;font-size:14px;
+  padding:11px 20px;border-radius:10px;font-weight:700;font-size:14px;
   cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none;
+  white-space:nowrap;
 }
-.btn-primary{background:var(--purple);color:#fff;width:100%}
+.btn-primary{background:var(--purple);color:#fff}
 .btn-primary:hover{background:#3d0070}
 .btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#085c2d}
 .btn-red{background:var(--red);color:#fff}
-.btn-sm{padding:7px 14px;font-size:12px}
-.login-err{color:var(--red);font-size:13px;margin-top:8px;display:none}
+.btn-red:hover{background:#aa1a00}
+.btn-outline{background:#fff;color:var(--text);border:1.5px solid var(--border)}
+.btn-sm{padding:6px 12px;font-size:12px}
 
-/* Layout */
+/* ── SIDEBAR ── */
 #adminApp{display:none}
 .sidebar{
-  position:fixed;top:0;left:0;bottom:0;width:240px;
+  position:fixed;top:0;left:0;bottom:0;width:220px;
   background:linear-gradient(180deg,#1a003a,#2a0055);
-  padding:24px 0;z-index:100;
+  padding:24px 0;z-index:100;overflow-y:auto;display:flex;flex-direction:column;
 }
 .sidebar-logo{
-  padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,.08);
-  display:flex;align-items:center;gap:10px;
+  padding:0 18px 20px;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
 }
-.sidebar-logo img{width:36px;height:36px;border-radius:50%;background:#fff;object-fit:cover}
-.sidebar-logo span{font-family:'Playfair Display',serif;font-size:14px;color:#fff;font-weight:700;line-height:1.3}
+.sidebar-logo img{width:34px;height:34px;border-radius:50%;background:#fff;object-fit:cover;flex-shrink:0}
+.sidebar-logo span{font-family:'Playfair Display',serif;font-size:13px;color:#fff;font-weight:700;line-height:1.3}
 .nav-item{
   display:flex;align-items:center;gap:12px;
-  padding:12px 20px;cursor:pointer;transition:all .2s;
+  padding:11px 18px;cursor:pointer;transition:all .2s;
   font-size:14px;font-weight:600;color:rgba(255,255,255,.65);text-decoration:none;
+  border:none;background:none;width:100%;text-align:left;
 }
 .nav-item:hover,.nav-item.active{background:rgba(255,255,255,.1);color:#fff}
-.nav-item .icon{font-size:18px;width:24px;text-align:center}
-.sidebar-foot{
-  position:absolute;bottom:20px;left:0;right:0;padding:0 20px;
-  font-size:11px;color:rgba(255,255,255,.3);text-align:center;
-}
-.main{margin-left:240px;padding:28px;min-height:100vh}
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;
-}
-.topbar h1{font-family:'Playfair Display',serif;font-size:26px;color:var(--purple)}
-.topbar-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.nav-item .icon{font-size:17px;width:22px;text-align:center;flex-shrink:0}
+.nav-item.logout{margin-top:auto;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar-foot{padding:12px 18px 0;font-size:11px;color:rgba(255,255,255,.3);text-align:center;flex-shrink:0}
 
-/* KPI cards */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-.kpi{
-  background:#fff;border-radius:16px;padding:20px 22px;
-  border:1px solid var(--border);
+/* ── MAIN ── */
+.main{margin-left:220px;padding:24px;min-height:100vh;padding-bottom:24px}
+.topbar{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:22px;gap:12px;flex-wrap:wrap;
 }
-.kpi-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.kpi-val{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--purple)}
-.kpi-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.topbar h1{font-family:'Playfair Display',serif;font-size:24px;color:var(--purple);line-height:1.2}
+.topbar-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.topbar-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ── KPI ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:#fff;border-radius:14px;padding:18px;border:1px solid var(--border)}
+.kpi-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.kpi-val{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--purple);word-break:break-word;line-height:1.2}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px}
 .kpi.green .kpi-val{color:var(--green)}
 .kpi.orange .kpi-val{color:var(--orange)}
 
-/* Progress */
-.progress-card{background:#fff;border-radius:16px;padding:22px;border:1px solid var(--border);margin-bottom:28px}
+/* ── PROGRESS ── */
+.progress-card{background:#fff;border-radius:14px;padding:20px;border:1px solid var(--border);margin-bottom:22px}
 .progress-card h3{font-size:14px;font-weight:700;color:var(--purple);margin-bottom:12px}
 .prog-bar{height:12px;background:rgba(42,0,85,.1);border-radius:999px;overflow:hidden;margin-bottom:8px}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),#ff9a3c);border-radius:999px;transition:width 1s}
-.prog-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.prog-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);flex-wrap:wrap;gap:4px}
 
-/* Table */
-.card{background:#fff;border-radius:16px;padding:0;border:1px solid var(--border);overflow:hidden;margin-bottom:28px}
+/* ── CARD / TABLE ── */
+.card{background:#fff;border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:22px}
 .card-head{
-  padding:18px 22px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
 }
 .card-head h3{font-size:15px;font-weight:700;color:var(--purple)}
-.filters{display:flex;gap:8px}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
 .filter-btn{
-  padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
   border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:all .2s;
 }
 .filter-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
-table{width:100%;border-collapse:collapse}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:480px}
 th{
-  background:#fafafa;padding:12px 16px;font-size:11px;font-weight:700;
+  background:#fafafa;padding:10px 14px;font-size:11px;font-weight:700;
   color:var(--muted);text-align:left;letter-spacing:.05em;text-transform:uppercase;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid var(--border);white-space:nowrap;
 }
-td{padding:14px 16px;font-size:13px;border-bottom:1px solid rgba(0,0,0,.04)}
+td{padding:12px 14px;font-size:13px;border-bottom:1px solid rgba(0,0,0,.04);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
-.badge{
-  display:inline-flex;padding:4px 10px;border-radius:999px;
-  font-size:11px;font-weight:700;
-}
+.badge{display:inline-flex;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
 .badge-pending{background:#fff3e0;color:#e65100}
 .badge-confirmed{background:#e8f5e9;color:#1b5e20}
 .badge-cancelled{background:#fce4ec;color:#880e4f}
-.amt-cell{font-weight:700;color:var(--purple)}
-.action-row{display:flex;gap:6px}
+.amt-cell{font-weight:700;color:var(--purple);white-space:nowrap}
+.action-row{display:flex;gap:4px;flex-wrap:wrap}
 .empty-row td{text-align:center;color:var(--muted);padding:40px;font-size:14px}
 
-/* Receipt modal */
+/* ── CONFIG FORM ── */
+.config-body{padding:24px}
+.config-section{margin-bottom:28px}
+.config-section h3{
+  font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);
+}
+.config-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:13px;font-weight:600;color:var(--text)}
+.form-group small{font-size:11px;color:var(--muted)}
+.input-cfg{
+  width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;background:#fff;
+  margin-top:2px;
+}
+.input-cfg:focus{border-color:var(--purple)}
+.toggle-row{display:flex;align-items:center;gap:12px;margin-top:6px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:999px;cursor:pointer;transition:.3s}
+.toggle-slider:before{
+  content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;
+  background:#fff;border-radius:50%;transition:.3s;
+}
+.toggle input:checked+.toggle-slider{background:var(--green)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px)}
+
+/* ── MODAL ── */
 .modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;
-  display:none;align-items:center;justify-content:center;
+  display:none;align-items:center;justify-content:center;padding:20px;
 }
 .modal-overlay.open{display:flex}
 .modal{
-  background:#fff;border-radius:20px;padding:32px;max-width:520px;width:90%;
+  background:#fff;border-radius:20px;padding:28px;max-width:520px;width:100%;
   max-height:90vh;overflow-y:auto;
 }
-.modal h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--purple);margin-bottom:20px}
-.modal-detail{display:grid;gap:8px;margin-bottom:20px}
-.modal-row{display:flex;gap:8px;font-size:14px}
-.modal-row strong{color:var(--purple);min-width:120px}
-.modal img.receipt{max-width:100%;border-radius:12px;border:1px solid var(--border);margin:12px 0}
-.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--purple);margin-bottom:16px}
+.modal-detail{display:grid;gap:8px;margin-bottom:14px}
+.modal-row{display:flex;gap:8px;font-size:14px;flex-wrap:wrap}
+.modal-row strong{color:var(--purple);min-width:100px;flex-shrink:0}
+.modal img.receipt{max-width:100%;border-radius:12px;border:1px solid var(--border);margin:10px 0;display:block}
+.modal-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 
-/* Toast */
+/* ── MOBILE BOTTOM NAV ── */
+.mobile-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:linear-gradient(180deg,#1a003a,#2a0055);
+  border-top:1px solid rgba(255,255,255,.1);
+  padding:6px 0 env(safe-area-inset-bottom,6px);
+}
+.mobile-nav-items{display:flex;justify-content:space-around;align-items:center}
+.mob-item{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 8px;cursor:pointer;border:none;background:none;
+  color:rgba(255,255,255,.5);font-size:10px;font-weight:600;font-family:'DM Sans',sans-serif;
+  transition:all .2s;min-width:48px;
+}
+.mob-item .icon{font-size:19px;line-height:1}
+.mob-item.active,.mob-item:hover{color:#fff}
+
+/* ── TOAST ── */
 .toast{
-  position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;
-  padding:14px 20px;border-radius:12px;font-size:14px;font-weight:600;
+  position:fixed;bottom:90px;right:16px;background:#1a1a1a;color:#fff;
+  padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;
   z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;
+  max-width:280px;word-break:break-word;
 }
 .toast.show{transform:translateY(0);opacity:1}
 
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
   .sidebar{display:none}
-  .main{margin-left:0;padding:16px}
+  .mobile-nav{display:block}
+  .main{margin-left:0;padding:14px;padding-bottom:86px}
+  .kpi-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi{padding:14px}
+  .kpi-val{font-size:20px}
+  .topbar h1{font-size:20px}
+  .topbar{margin-bottom:16px}
+  .config-grid{grid-template-columns:1fr}
+  .modal{padding:20px}
+  .toast{bottom:100px;right:12px;left:12px;max-width:100%}
+}
+@media(max-width:400px){
   .kpi-row{grid-template-columns:1fr 1fr}
+  .filters{gap:4px}
+  .filter-btn{padding:5px 9px;font-size:11px}
 }
 </style>
 </head>
@@ -167,38 +233,54 @@ tr:hover td{background:#fafafa}
     <img src="/public/images/semfronteiraslogo.png" alt="Logo">
     <h2>Admin Panel</h2>
     <p>Nação Ubuntu Malawi · Doações</p>
-    <input type="password" class="input" id="pwdInput" placeholder="Senha de acesso" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+    <input type="password" class="input" id="pwdInput" placeholder="Senha de acesso"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Entrar</button>
     <p class="login-err" id="loginErr">Senha incorreta</p>
   </div>
 </div>
 
 <!-- ADMIN APP -->
 <div id="adminApp">
+
+  <!-- Sidebar desktop -->
   <div class="sidebar">
     <div class="sidebar-logo">
       <img src="/public/images/semfronteiraslogo.png" alt="Logo">
       <span>Nação Ubuntu<br>Admin</span>
     </div>
-    <a class="nav-item active" onclick="showTab('dashboard')"><span class="icon">📊</span> Dashboard</a>
-    <a class="nav-item" onclick="showTab('doacoes')"><span class="icon">💛</span> Doações</a>
-    <a class="nav-item" onclick="showTab('pendentes')"><span class="icon">⏳</span> Pendentes</a>
-    <a class="nav-item" href="/index.html" target="_blank"><span class="icon">🌐</span> Ver site</a>
-    <a class="nav-item" onclick="doLogout()" style="margin-top:auto;position:absolute;bottom:60px;left:0;right:0">
-      <span class="icon">🚪</span> Sair
-    </a>
-    <div class="sidebar-foot">Malawi Donation v1.0</div>
+    <button class="nav-item active" onclick="showTab('dashboard')"><span class="icon">📊</span>Dashboard</button>
+    <button class="nav-item" onclick="showTab('doacoes')"><span class="icon">💛</span>Doações</button>
+    <button class="nav-item" onclick="showTab('pendentes')"><span class="icon">⏳</span>Pendentes</button>
+    <button class="nav-item" onclick="showTab('config')"><span class="icon">⚙️</span>Configurações</button>
+    <a class="nav-item" href="/index.html" target="_blank"><span class="icon">🌐</span>Ver site</a>
+    <button class="nav-item logout" onclick="doLogout()"><span class="icon">🚪</span>Sair</button>
+    <div class="sidebar-foot">Malawi Admin v2.0</div>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <div class="mobile-nav">
+    <div class="mobile-nav-items">
+      <button class="mob-item active" onclick="showTab('dashboard')"><span class="icon">📊</span>Dashboard</button>
+      <button class="mob-item" onclick="showTab('doacoes')"><span class="icon">💛</span>Doações</button>
+      <button class="mob-item" onclick="showTab('pendentes')"><span class="icon">⏳</span>Pendentes</button>
+      <button class="mob-item" onclick="showTab('config')"><span class="icon">⚙️</span>Config</button>
+      <button class="mob-item" onclick="doLogout()"><span class="icon">🚪</span>Sair</button>
+    </div>
   </div>
 
   <div class="main">
-    <!-- DASHBOARD -->
+
+    <!-- ── DASHBOARD ── -->
     <div id="tab-dashboard">
       <div class="topbar">
         <div>
           <h1>Dashboard</h1>
           <div class="topbar-sub" id="lastUpdate">Carregando...</div>
         </div>
-        <button class="btn btn-primary" onclick="loadAll()" style="width:auto;padding:10px 20px">🔄 Atualizar</button>
+        <div class="topbar-right">
+          <button class="btn btn-primary" onclick="loadAll()" style="padding:10px 18px">🔄 Atualizar</button>
+        </div>
       </div>
 
       <div class="kpi-row">
@@ -229,52 +311,140 @@ tr:hover td{background:#fafafa}
         <div class="prog-bar"><div class="prog-fill" id="adminProgFill" style="width:0%"></div></div>
         <div class="prog-labels">
           <span id="adminProgVal">R$ 0,00</span>
-          <span id="adminProgMeta">Meta: R$ 50.000,00</span>
+          <span id="adminProgMeta">Meta: R$ 15.000,00</span>
         </div>
       </div>
 
       <div class="card">
         <div class="card-head"><h3>Últimas 10 doações</h3></div>
-        <table><thead><tr>
-          <th>Data</th><th>Nome</th><th>Valor</th><th>Status</th><th>Ações</th>
-        </tr></thead>
-        <tbody id="recentTbody"><tr class="empty-row"><td colspan="5">Carregando...</td></tr></tbody></table>
+        <div class="table-wrap">
+          <table><thead><tr>
+            <th>Data</th><th>Nome</th><th>Valor</th><th>Status</th><th>Ações</th>
+          </tr></thead>
+          <tbody id="recentTbody"><tr class="empty-row"><td colspan="5">Carregando...</td></tr></tbody></table>
+        </div>
       </div>
     </div>
 
-    <!-- ALL DOACOES -->
+    <!-- ── DOAÇÕES ── -->
     <div id="tab-doacoes" style="display:none">
       <div class="topbar">
         <div><h1>Todas as Doações</h1></div>
         <div class="filters">
           <button class="filter-btn active" onclick="filterTab('all',this)">Todas</button>
-          <button class="filter-btn" onclick="filterTab('confirmado',this)">Confirmadas</button>
-          <button class="filter-btn" onclick="filterTab('pendente',this)">Pendentes</button>
-          <button class="filter-btn" onclick="filterTab('cancelado',this)">Canceladas</button>
+          <button class="filter-btn" onclick="filterTab('confirmado',this)">✅ Confirmadas</button>
+          <button class="filter-btn" onclick="filterTab('pendente',this)">⏳ Pendentes</button>
+          <button class="filter-btn" onclick="filterTab('cancelado',this)">❌ Canceladas</button>
         </div>
       </div>
       <div class="card">
-        <table><thead><tr>
-          <th>Data</th><th>Nome</th><th>Telefone</th><th>Valor</th><th>Status</th><th>Comprovante</th><th>Ações</th>
-        </tr></thead>
-        <tbody id="allTbody"><tr class="empty-row"><td colspan="7">Carregando...</td></tr></tbody></table>
+        <div class="table-wrap">
+          <table><thead><tr>
+            <th>Data</th><th>Nome</th><th>Telefone</th><th>Valor</th><th>Status</th><th>Comprovante</th><th>Ações</th>
+          </tr></thead>
+          <tbody id="allTbody"><tr class="empty-row"><td colspan="7">Carregando...</td></tr></tbody></table>
+        </div>
       </div>
     </div>
 
-    <!-- PENDENTES -->
+    <!-- ── PENDENTES ── -->
     <div id="tab-pendentes" style="display:none">
-      <div class="topbar"><div><h1>⏳ Pendentes</h1><div class="topbar-sub">Doações aguardando confirmação</div></div></div>
+      <div class="topbar">
+        <div><h1>⏳ Pendentes</h1><div class="topbar-sub">Doações aguardando confirmação</div></div>
+      </div>
       <div class="card">
-        <table><thead><tr>
-          <th>Data</th><th>Nome</th><th>Telefone</th><th>Valor</th><th>Comprovante</th><th>Ações</th>
-        </tr></thead>
-        <tbody id="pendTbody"><tr class="empty-row"><td colspan="6">Carregando...</td></tr></tbody></table>
+        <div class="table-wrap">
+          <table><thead><tr>
+            <th>Data</th><th>Nome / Telefone</th><th>Valor</th><th>Comprovante</th><th>Ações</th>
+          </tr></thead>
+          <tbody id="pendTbody"><tr class="empty-row"><td colspan="5">Carregando...</td></tr></tbody></table>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- RECEIPT MODAL -->
+    <!-- ── CONFIGURAÇÕES ── -->
+    <div id="tab-config" style="display:none">
+      <div class="topbar">
+        <div><h1>⚙️ Configurações</h1><div class="topbar-sub">Ajuste os dados da campanha e do PIX</div></div>
+        <div class="topbar-right">
+          <button class="btn btn-primary" onclick="saveConfig()" style="padding:10px 18px">💾 Salvar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="config-body">
+
+          <div class="config-section">
+            <h3>🎯 Meta da Campanha</h3>
+            <div class="config-grid">
+              <div class="form-group">
+                <label>Valor da meta (R$)</label>
+                <small>Exibido na barra de progresso do site</small>
+                <input type="number" class="input-cfg" id="cfg_meta_valor" placeholder="15000" min="1">
+              </div>
+              <div class="form-group">
+                <label>Label da meta</label>
+                <small>Texto descritivo da meta</small>
+                <input type="text" class="input-cfg" id="cfg_meta_label" placeholder="Meta: R$ 15.000">
+              </div>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <h3>💳 Dados PIX</h3>
+            <div class="config-grid">
+              <div class="form-group">
+                <label>Chave PIX</label>
+                <small>CPF, e-mail, telefone ou chave aleatória</small>
+                <input type="text" class="input-cfg" id="cfg_pix_key" placeholder="06432680816">
+              </div>
+              <div class="form-group">
+                <label>Nome do recebedor</label>
+                <small>Máx. 25 caracteres (padrão PIX EMV)</small>
+                <input type="text" class="input-cfg" id="cfg_pix_name" placeholder="Maria Izabel Moreno de So" maxlength="25">
+              </div>
+              <div class="form-group">
+                <label>Cidade</label>
+                <small>Sem acentos, máx. 15 caracteres</small>
+                <input type="text" class="input-cfg" id="cfg_pix_city" placeholder="SAO PAULO" maxlength="15">
+              </div>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <h3>📞 Contato</h3>
+            <div class="config-grid">
+              <div class="form-group">
+                <label>WhatsApp Izabel</label>
+                <small>Formato: 5515999990000 (sem espaços)</small>
+                <input type="text" class="input-cfg" id="cfg_whatsapp_izabel" placeholder="5515996016655">
+              </div>
+            </div>
+          </div>
+
+          <div class="config-section" style="margin-bottom:0">
+            <h3>🔧 Status da Campanha</h3>
+            <div class="form-group">
+              <label>Campanha ativa</label>
+              <small>Desative para encerrar o recebimento de novas doações</small>
+              <div class="toggle-row">
+                <label class="toggle">
+                  <input type="checkbox" id="cfg_campanha_ativa" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+                <span id="cfg_campanha_label" style="font-size:13px;font-weight:600;color:var(--green)">Ativa</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div><!-- .main -->
+</div><!-- #adminApp -->
+
+<!-- MODAL DETALHE -->
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h2>📄 Detalhe da Doação</h2>
@@ -287,11 +457,10 @@ tr:hover td{background:#fafafa}
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ───────────────────────────────────────────────────────────────────
-const SB_URL    = 'https://hgsekgeijgklrategzew.supabase.co';
-const SB_KEY    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVnemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
+// ── CONFIG SUPABASE ───────────────────────────────────────────────────────────
+const SB_URL = 'https://hgsekgeijgklrategzew.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVnemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
 const ADMIN_PWD = '123456';
-
 const SB_HEADERS = {
   'apikey': SB_KEY,
   'Authorization': 'Bearer ' + SB_KEY,
@@ -314,12 +483,20 @@ async function sbUpdate(table, id, payload) {
   return res.json();
 }
 
-function getPublicUrl(filename) {
-  return SB_URL + '/storage/v1/object/public/comprovantes/' + filename;
+async function sbPatchConfig(chave, valor) {
+  const res = await fetch(SB_URL + '/rest/v1/configuracoes?chave=eq.' + encodeURIComponent(chave), {
+    method: 'PATCH',
+    headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ valor: String(valor) })
+  });
+  if (!res.ok) throw new Error(await res.text());
 }
+
+function getPublicUrl(f) { return SB_URL + '/storage/v1/object/public/comprovantes/' + f; }
 
 let allDoacoes = [];
 let currentFilter = 'all';
+let metaValor = 15000;
 
 // ── AUTH ─────────────────────────────────────────────────────────────────────
 function doLogin() {
@@ -346,37 +523,46 @@ if (sessionStorage.getItem('malawi_admin') === '1') {
 }
 
 // ── TABS ─────────────────────────────────────────────────────────────────────
+const ALL_TABS = ['dashboard','doacoes','pendentes','config'];
+
 function showTab(name) {
-  ['dashboard','doacoes','pendentes'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===name ? 'block' : 'none';
+  ALL_TABS.forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === name ? 'block' : 'none';
   });
-  document.querySelectorAll('.nav-item').forEach((el,i) => {
-    el.classList.toggle('active', el.getAttribute('onclick')===`showTab('${name}')`);
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.getAttribute('onclick') === `showTab('${name}')`);
   });
-  if (name === 'doacoes') renderAll(allDoacoes);
-  if (name === 'pendentes') renderPend(allDoacoes.filter(d=>d.status==='pendente'));
+  document.querySelectorAll('.mob-item').forEach(el => {
+    el.classList.toggle('active', el.getAttribute('onclick') === `showTab('${name}')`);
+  });
+  if (name === 'doacoes')   renderAll(allDoacoes);
+  if (name === 'pendentes') renderPend(allDoacoes.filter(d => d.status === 'pendente'));
+  if (name === 'config')    loadConfig();
 }
 
-// ── LOAD DATA ────────────────────────────────────────────────────────────────
+// ── LOAD DATA ─────────────────────────────────────────────────────────────────
 async function loadAll() {
   try {
+    const cfgRows = await sbQuery('configuracoes?select=chave,valor');
+    const cfg = {};
+    cfgRows.forEach(r => { cfg[r.chave] = r.valor; });
+    metaValor = parseFloat(cfg.meta_valor) || 15000;
+
     allDoacoes = await sbQuery('doacoes?select=*&order=created_at.desc');
     updateKPIs(allDoacoes);
     renderRecent(allDoacoes.slice(0,10));
-    renderAll(allDoacoes);
-    renderPend(allDoacoes.filter(d=>d.status==='pendente'));
-    document.getElementById('lastUpdate').textContent = 'Atualizado: ' + new Date().toLocaleString('pt-BR');
-  } catch(e) { showToast('❌ Erro ao carregar dados: ' + e.message); }
+    document.getElementById('lastUpdate').textContent =
+      'Atualizado: ' + new Date().toLocaleString('pt-BR');
+  } catch(e) { showToast('❌ ' + e.message); }
 }
 
 function updateKPIs(data) {
-  const conf   = data.filter(d=>d.status==='confirmado');
-  const pend   = data.filter(d=>d.status==='pendente');
-  const total  = conf.reduce((s,d)=>s+parseFloat(d.valor||0),0);
-  const pendV  = pend.reduce((s,d)=>s+parseFloat(d.valor||0),0);
-  const medio  = conf.length ? total/conf.length : 0;
-  const meta   = 15000;
-  const pct    = Math.min(100,(total/meta)*100).toFixed(1);
+  const conf  = data.filter(d => d.status === 'confirmado');
+  const pend  = data.filter(d => d.status === 'pendente');
+  const total = conf.reduce((s,d) => s + parseFloat(d.valor||0), 0);
+  const pendV = pend.reduce((s,d) => s + parseFloat(d.valor||0), 0);
+  const medio = conf.length ? total / conf.length : 0;
+  const pct   = Math.min(100, (total / metaValor) * 100).toFixed(1);
 
   document.getElementById('kpiTotal').textContent    = fmt(total);
   document.getElementById('kpiQtdConf').textContent  = conf.length + ' doações confirmadas';
@@ -384,122 +570,188 @@ function updateKPIs(data) {
   document.getElementById('kpiValPend').textContent  = fmt(pendV) + ' em revisão';
   document.getElementById('kpiAllTotal').textContent = data.length;
   document.getElementById('kpiMedio').textContent    = fmt(medio);
-  document.getElementById('adminProgFill').style.width = pct+'%';
+  document.getElementById('adminProgFill').style.width = pct + '%';
   document.getElementById('adminProgVal').textContent  = fmt(total);
-  document.getElementById('adminProgMeta').textContent = `Meta: ${fmt(meta)} (${pct}%)`;
+  document.getElementById('adminProgMeta').textContent = 'Meta: ' + fmt(metaValor) + ' (' + pct + '%)';
 }
 
+// ── FORMAT ───────────────────────────────────────────────────────────────────
 function fmt(v) { return parseFloat(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
-function fmtDate(d) { return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}); }
-
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
 function badge(s) {
-  const map = {pendente:'badge-pending ⏳',confirmado:'badge-confirmed ✅',cancelado:'badge-cancelled ❌'};
-  const [cls,icon] = (map[s]||'badge-pending ⏳').split(' ');
-  return `<span class="badge ${cls}">${icon} ${s}</span>`;
+  const m = {pendente:'badge-pending ⏳',confirmado:'badge-confirmed ✅',cancelado:'badge-cancelled ❌'};
+  const p = (m[s]||'badge-pending ⏳').split(' ');
+  return `<span class="badge ${p[0]}">${p[1]} ${s}</span>`;
+}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── RENDER TABLES ────────────────────────────────────────────────────────────
+// ── RENDER TABLES ─────────────────────────────────────────────────────────────
 function renderRecent(rows) {
   const tb = document.getElementById('recentTbody');
   if (!rows.length) { tb.innerHTML='<tr class="empty-row"><td colspan="5">Nenhuma doação ainda</td></tr>'; return; }
   tb.innerHTML = rows.map(r => `
     <tr>
-      <td>${fmtDate(r.created_at)}</td>
-      <td><strong>${r.nome}</strong></td>
+      <td style="white-space:nowrap;font-size:12px">${fmtDate(r.created_at)}</td>
+      <td><strong>${esc(r.nome)}</strong></td>
       <td class="amt-cell">${fmt(r.valor)}</td>
       <td>${badge(r.status)}</td>
       <td><div class="action-row">
-        <button class="btn btn-sm" onclick="openModal('${r.id}')">👁 Ver</button>
+        <button class="btn btn-outline btn-sm" onclick="openModal('${r.id}')">👁</button>
         ${r.status==='pendente'?`<button class="btn btn-green btn-sm" onclick="confirm_donation('${r.id}')">✅</button>`:''}
       </div></td>
     </tr>`).join('');
 }
 
 function renderAll(rows) {
-  const filtered = currentFilter==='all' ? rows : rows.filter(d=>d.status===currentFilter);
+  const filtered = currentFilter === 'all' ? rows : rows.filter(d => d.status === currentFilter);
   const tb = document.getElementById('allTbody');
   if (!filtered.length) { tb.innerHTML='<tr class="empty-row"><td colspan="7">Nenhum registro</td></tr>'; return; }
   tb.innerHTML = filtered.map(r => `
     <tr>
-      <td>${fmtDate(r.created_at)}</td>
-      <td><strong>${r.nome}</strong></td>
-      <td>${r.telefone||'—'}</td>
+      <td style="white-space:nowrap;font-size:12px">${fmtDate(r.created_at)}</td>
+      <td><strong>${esc(r.nome)}</strong></td>
+      <td style="white-space:nowrap">${r.telefone||'—'}</td>
       <td class="amt-cell">${fmt(r.valor)}</td>
       <td>${badge(r.status)}</td>
-      <td>${r.comprovante_url?'<span style="color:var(--green)">📎 Enviado</span>':'—'}</td>
+      <td>${r.comprovante_url?'<span style="color:var(--green)">📎</span>':'—'}</td>
       <td><div class="action-row">
-        <button class="btn btn-sm" onclick="openModal('${r.id}')">👁 Ver</button>
-        ${r.status==='pendente'?`<button class="btn btn-green btn-sm" onclick="confirm_donation('${r.id}')">✅ Confirmar</button><button class="btn btn-red btn-sm" onclick="cancel_donation('${r.id}')">❌</button>`:''}
+        <button class="btn btn-outline btn-sm" onclick="openModal('${r.id}')">👁 Ver</button>
+        ${r.status==='pendente'?`
+          <button class="btn btn-green btn-sm" onclick="confirm_donation('${r.id}')">✅</button>
+          <button class="btn btn-red btn-sm" onclick="cancel_donation('${r.id}')">❌</button>`:''
+        }
       </div></td>
     </tr>`).join('');
 }
 
 function renderPend(rows) {
   const tb = document.getElementById('pendTbody');
-  if (!rows.length) { tb.innerHTML='<tr class="empty-row"><td colspan="6">✅ Sem pendências</td></tr>'; return; }
+  if (!rows.length) { tb.innerHTML='<tr class="empty-row"><td colspan="5">✅ Nenhuma pendência</td></tr>'; return; }
   tb.innerHTML = rows.map(r => `
     <tr>
-      <td>${fmtDate(r.created_at)}</td>
-      <td><strong>${r.nome}</strong><br><small>${r.telefone||''}</small></td>
-      <td>${r.telefone||'—'}</td>
+      <td style="white-space:nowrap;font-size:12px">${fmtDate(r.created_at)}</td>
+      <td>
+        <strong>${esc(r.nome)}</strong>
+        ${r.telefone?`<br><small style="color:var(--muted)">${r.telefone}</small>`:''}
+      </td>
       <td class="amt-cell">${fmt(r.valor)}</td>
       <td>${r.comprovante_url?'<span style="color:var(--green)">📎 Enviado</span>':'—'}</td>
       <td><div class="action-row">
-        <button class="btn btn-sm" onclick="openModal('${r.id}')">👁 Ver</button>
+        <button class="btn btn-outline btn-sm" onclick="openModal('${r.id}')">👁 Ver</button>
         <button class="btn btn-green btn-sm" onclick="confirm_donation('${r.id}')">✅ Confirmar</button>
-        <button class="btn btn-red btn-sm" onclick="cancel_donation('${r.id}')">❌ Cancelar</button>
+        <button class="btn btn-red btn-sm" onclick="cancel_donation('${r.id}')">❌</button>
       </div></td>
     </tr>`).join('');
 }
 
 function filterTab(f, el) {
   currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   renderAll(allDoacoes);
 }
 
-// ── MODAL ────────────────────────────────────────────────────────────────────
+// ── CONFIGURAÇÕES ─────────────────────────────────────────────────────────────
+async function loadConfig() {
+  try {
+    const rows = await sbQuery('configuracoes?select=chave,valor');
+    const cfg = {};
+    rows.forEach(r => { cfg[r.chave] = r.valor; });
+
+    if (cfg.meta_valor)      document.getElementById('cfg_meta_valor').value = cfg.meta_valor;
+    if (cfg.meta_label)      document.getElementById('cfg_meta_label').value = cfg.meta_label;
+    if (cfg.pix_key)         document.getElementById('cfg_pix_key').value = cfg.pix_key;
+    if (cfg.pix_name)        document.getElementById('cfg_pix_name').value = cfg.pix_name;
+    if (cfg.pix_city)        document.getElementById('cfg_pix_city').value = cfg.pix_city;
+    if (cfg.whatsapp_izabel) document.getElementById('cfg_whatsapp_izabel').value = cfg.whatsapp_izabel;
+
+    const ativa = cfg.campanha_ativa !== 'false';
+    document.getElementById('cfg_campanha_ativa').checked = ativa;
+    updateCampanhaLabel(ativa);
+  } catch(e) { showToast('❌ Erro ao carregar config: ' + e.message); }
+}
+
+function updateCampanhaLabel(ativa) {
+  const el = document.getElementById('cfg_campanha_label');
+  el.textContent = ativa ? 'Ativa' : 'Inativa';
+  el.style.color = ativa ? 'var(--green)' : 'var(--red)';
+}
+
+document.getElementById('cfg_campanha_ativa').addEventListener('change', function() {
+  updateCampanhaLabel(this.checked);
+});
+
+async function saveConfig() {
+  const fields = {
+    meta_valor:      document.getElementById('cfg_meta_valor').value.trim(),
+    meta_label:      document.getElementById('cfg_meta_label').value.trim(),
+    pix_key:         document.getElementById('cfg_pix_key').value.trim(),
+    pix_name:        document.getElementById('cfg_pix_name').value.trim(),
+    pix_city:        document.getElementById('cfg_pix_city').value.trim().toUpperCase(),
+    whatsapp_izabel: document.getElementById('cfg_whatsapp_izabel').value.trim(),
+    campanha_ativa:  document.getElementById('cfg_campanha_ativa').checked ? 'true' : 'false',
+  };
+
+  try {
+    await Promise.all(
+      Object.entries(fields)
+        .filter(([,v]) => v !== '')
+        .map(([chave, valor]) => sbPatchConfig(chave, valor))
+    );
+    metaValor = parseFloat(fields.meta_valor) || metaValor;
+    showToast('✅ Configurações salvas com sucesso!');
+  } catch(e) {
+    showToast('❌ Erro ao salvar: ' + e.message);
+  }
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
 function openModal(id) {
-  const r = allDoacoes.find(d=>d.id===id);
+  const r = allDoacoes.find(d => d.id === id);
   if (!r) return;
   document.getElementById('modalDetail').innerHTML = `
-    <div class="modal-row"><strong>Nome:</strong> ${r.nome}</div>
+    <div class="modal-row"><strong>Nome:</strong> ${esc(r.nome)}</div>
     <div class="modal-row"><strong>Telefone:</strong> ${r.telefone||'—'}</div>
     <div class="modal-row"><strong>E-mail:</strong> ${r.email||'—'}</div>
     <div class="modal-row"><strong>Valor:</strong> <span style="color:var(--purple);font-weight:700">${fmt(r.valor)}</span></div>
     <div class="modal-row"><strong>Status:</strong> ${badge(r.status)}</div>
     <div class="modal-row"><strong>Data:</strong> ${fmtDate(r.created_at)}</div>
-    <div class="modal-row"><strong>PIX TxID:</strong> <code>${r.pix_txid||'—'}</code></div>
+    <div class="modal-row"><strong>PIX TxID:</strong> <code style="font-size:11px;word-break:break-all">${r.pix_txid||'—'}</code></div>
   `;
-  // Receipt
   if (r.comprovante_url) {
     const url = getPublicUrl(r.comprovante_url);
     document.getElementById('modalReceipt').innerHTML =
-      url.match(/\.(jpg|jpeg|png|gif|webp)/i)
+      /\.(jpg|jpeg|png|gif|webp)/i.test(url)
         ? `<img class="receipt" src="${url}" alt="Comprovante">`
-        : `<a href="${url}" target="_blank" class="btn btn-primary" style="width:auto">📄 Abrir comprovante</a>`;
+        : `<a href="${url}" target="_blank" class="btn btn-primary" style="margin-top:10px">📄 Abrir comprovante</a>`;
   } else {
-    document.getElementById('modalReceipt').innerHTML = '<p style="color:var(--muted);font-size:13px">Sem comprovante</p>';
+    document.getElementById('modalReceipt').innerHTML =
+      '<p style="color:var(--muted);font-size:13px;margin-top:8px">Sem comprovante anexado</p>';
   }
   document.getElementById('modalActions').innerHTML = `
     ${r.status==='pendente'?`
-      <button class="btn btn-green" onclick="confirm_donation('${r.id}');closeModal()">✅ Confirmar doação</button>
+      <button class="btn btn-green" onclick="confirm_donation('${r.id}');closeModal()">✅ Confirmar</button>
       <button class="btn btn-red" onclick="cancel_donation('${r.id}');closeModal()">❌ Cancelar</button>
     `:''}
-    <button class="btn" style="border:1.5px solid var(--border)" onclick="closeModal()">Fechar</button>
+    <button class="btn btn-outline" onclick="closeModal()">Fechar</button>
   `;
   document.getElementById('modalOverlay').classList.add('open');
 }
 
 function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 
-// ── ACTIONS ──────────────────────────────────────────────────────────────────
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
 async function confirm_donation(id) {
   try {
     await sbUpdate('doacoes', id, {status:'confirmado', confirmado_em: new Date().toISOString()});
     showToast('✅ Doação confirmada!');
     await loadAll();
+    renderAll(allDoacoes);
+    renderPend(allDoacoes.filter(d=>d.status==='pendente'));
   } catch(e) { showToast('❌ Erro: ' + e.message); }
 }
 
@@ -507,30 +759,19 @@ async function cancel_donation(id) {
   if (!confirm('Cancelar esta doação?')) return;
   try {
     await sbUpdate('doacoes', id, {status:'cancelado'});
-    showToast('❌ Doação cancelada');
+    showToast('Doação cancelada');
     await loadAll();
+    renderAll(allDoacoes);
+    renderPend(allDoacoes.filter(d=>d.status==='pendente'));
   } catch(e) { showToast('❌ Erro: ' + e.message); }
 }
 
-// ── MOCK (sem Supabase) ───────────────────────────────────────────────────────
-function renderMock() {
-  const mock = [
-    {id:'1',created_at:new Date().toISOString(),nome:'Maria Silva',telefone:'(15) 99999-0001',email:'maria@email.com',valor:1000,status:'confirmado',comprovante_url:'mock'},
-    {id:'2',created_at:new Date().toISOString(),nome:'João Santos',telefone:'(15) 99999-0002',email:null,valor:500,status:'pendente',comprovante_url:'mock'},
-    {id:'3',created_at:new Date().toISOString(),nome:'Ana Costa',telefone:'(15) 99999-0003',email:null,valor:1500,status:'pendente',comprovante_url:null},
-  ];
-  allDoacoes = mock;
-  updateKPIs(mock);
-  renderRecent(mock);
-  document.getElementById('lastUpdate').textContent = '⚠️ Modo demo — Configure o Supabase no código';
-  showToast('⚠️ Supabase não configurado — modo demo');
-}
-
-// ── TOAST ────────────────────────────────────────────────────────────────────
-function showToast(msg,dur=3000){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),dur);
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function showToast(msg, dur=3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
 }
 </script>
 </body>
