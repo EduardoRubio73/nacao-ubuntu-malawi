@@ -727,22 +727,46 @@ async function sendDonation() {
   btn.textContent = 'Enviando...';
 
   try {
-    var receiptUrl = null;
-    if (supabase) {
+    if (!supabase) throw new Error('Supabase não inicializado');
+
+    // 1. Upload comprovante (opcional — não bloqueia o insert)
+    var receiptUrl  = null;
+    var receiptNome = uploadedFile.name;
+    try {
       var ext   = uploadedFile.name.split('.').pop();
       var fname = Date.now() + '_' + name.replace(/\s+/g,'_') + '.' + ext;
       var up    = await supabase.storage.from('comprovantes').upload(fname, uploadedFile, { upsert: false });
-      if (!up.error) receiptUrl = fname;
-
-      await supabase.from('doacoes').insert({
-        nome: name, telefone: phone, email: email || null,
-        valor: selectedAmt, status: 'pendente',
-        comprovante_url: receiptUrl,
-        comprovante_nome: uploadedFile.name,
-        pix_txid: pixCode.slice(0, 40)
-      });
+      if (up.error) {
+        console.warn('Storage upload falhou:', up.error.message);
+      } else {
+        receiptUrl = fname;
+      }
+    } catch(storageErr) {
+      console.warn('Storage erro:', storageErr);
     }
 
+    // 2. Gravar doação na tabela
+    var payload = {
+      nome:             name,
+      telefone:         phone,
+      email:            email || null,
+      valor:            selectedAmt,
+      status:           'pendente',
+      comprovante_url:  receiptUrl,
+      comprovante_nome: receiptNome,
+      pix_txid:         pixCode.slice(0, 100)
+    };
+
+    var result = await supabase.from('doacoes').insert(payload).select();
+
+    if (result.error) {
+      console.error('Insert error:', result.error);
+      throw new Error(result.error.message || 'Erro ao salvar doação');
+    }
+
+    console.log('Doação salva:', result.data);
+
+    // 3. Sucesso
     document.getElementById('successName').textContent = name.split(' ')[0];
     document.getElementById('successAmt').textContent =
       selectedAmt.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -751,8 +775,8 @@ async function sendDonation() {
     for (var i = 0; i < steps.length; i++) steps[i].style.display = 'none';
 
   } catch(err) {
-    console.error(err);
-    showToast('❌ Erro ao enviar. Tente novamente.');
+    console.error('sendDonation erro:', err);
+    showToast('❌ ' + (err.message || 'Erro ao enviar. Tente novamente.'));
     btn.disabled = false;
     btn.textContent = '💚 Confirmar doação';
   }
