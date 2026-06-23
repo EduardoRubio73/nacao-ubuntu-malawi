@@ -53,6 +53,7 @@ nav{
 .hero::before{
   content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse 70% 50% at 80% 40%,rgba(245,93,0,.12),transparent 70%);
+  pointer-events:none;
 }
 .hero-in{
   max-width:900px;margin:auto;padding:60px 20px;
@@ -127,7 +128,7 @@ nav{
 .steps::before{
   content:'';position:absolute;top:20px;left:24px;right:24px;height:2px;
   background:linear-gradient(90deg,var(--purple) var(--prog,33%),rgba(0,0,0,.1) var(--prog,33%));
-  z-index:0;transition:--prog .3s;
+  z-index:0;transition:--prog .3s;pointer-events:none;
 }
 .step{
   display:flex;flex-direction:column;align-items:center;gap:8px;
