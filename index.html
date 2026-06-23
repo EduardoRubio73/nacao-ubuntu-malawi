@@ -13,7 +13,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+<script>
+// Fallback: se unpkg falhar, tenta jsdelivr
+if (typeof window.supabase === 'undefined') {
+  document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"><\/script>');
+}
+</script>
 
 <style>
 /* ── RESET ── */
@@ -544,7 +550,12 @@ var PIX_NAME = 'Maria Izabel Moreno de So';
 var PIX_CITY = 'SAO PAULO';
 
 var supabase = null;
-try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) {}
+try {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  console.log('Supabase inicializado OK');
+} catch(e) {
+  console.error('Supabase FALHOU ao inicializar:', e.message);
+}
 
 // ── STATE ────────────────────────────────────────────────────────────────────
 var selectedAmt  = 0;
@@ -727,7 +738,7 @@ async function sendDonation() {
   btn.textContent = 'Enviando...';
 
   try {
-    if (!supabase) throw new Error('Supabase não inicializado');
+    if (!supabase) throw new Error('Erro de conexão com o servidor. Recarregue a página e tente novamente.');
 
     // 1. Upload comprovante (opcional — não bloqueia o insert)
     var receiptUrl  = null;
