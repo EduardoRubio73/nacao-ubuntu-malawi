@@ -52,6 +52,13 @@ ALTER TABLE doacoes       ENABLE ROW LEVEL SECURITY;
 ALTER TABLE configuracoes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_log     ENABLE ROW LEVEL SECURITY;
 
+-- Idempotente: remove policies existentes antes de recriar
+DROP POLICY IF EXISTS "insert_doacoes"   ON doacoes;
+DROP POLICY IF EXISTS "read_config"      ON configuracoes;
+DROP POLICY IF EXISTS "read_doacoes"     ON doacoes;
+DROP POLICY IF EXISTS "update_doacoes"   ON doacoes;
+DROP POLICY IF EXISTS "insert_admin_log" ON admin_log;
+
 -- Policies: qualquer um pode inserir doação (anon)
 CREATE POLICY "insert_doacoes" ON doacoes
   FOR INSERT TO anon WITH CHECK (true);
@@ -60,10 +67,7 @@ CREATE POLICY "insert_doacoes" ON doacoes
 CREATE POLICY "read_config" ON configuracoes
   FOR SELECT TO anon USING (true);
 
--- Admin (service_role) tem acesso total — não precisa de policy separada
-
 -- Policies para o painel admin (usa anon key com senha client-side)
--- ⚠️ Para produção com dados sensíveis: migrar para Supabase Auth + service_role via Edge Function
 CREATE POLICY "read_doacoes" ON doacoes
   FOR SELECT TO anon USING (true);
 
@@ -92,6 +96,10 @@ SELECT
   COUNT(*)                 AS qtd
 FROM doacoes
 WHERE status = 'confirmado';
+
+-- Acesso anon às views de progresso (necessário para loadProgress() funcionar)
+GRANT SELECT ON total_arrecadado TO anon;
+GRANT SELECT ON resumo_doacoes   TO anon;
 
 -- Index para performance
 CREATE INDEX IF NOT EXISTS idx_doacoes_status     ON doacoes(status);

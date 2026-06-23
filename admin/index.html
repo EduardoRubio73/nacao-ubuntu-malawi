@@ -165,7 +165,7 @@ tr:hover td{background:#fafafa}
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
-    <img src="/public/selo-fraternidade.png" alt="Logo">
+    <img src="/public/images/semfronteiraslogo.png" alt="Logo">
     <h2>Admin Panel</h2>
     <p>Nação Ubuntu Malawi · Doações</p>
     <input type="password" class="input" id="pwdInput" placeholder="Senha de acesso" onkeydown="if(event.key==='Enter')doLogin()">
@@ -178,7 +178,7 @@ tr:hover td{background:#fafafa}
 <div id="adminApp">
   <div class="sidebar">
     <div class="sidebar-logo">
-      <img src="/public/selo-fraternidade.png" alt="Logo">
+      <img src="/public/images/semfronteiraslogo.png" alt="Logo">
       <span>Nação Ubuntu<br>Admin</span>
     </div>
     <a class="nav-item active" onclick="showTab('dashboard')"><span class="icon">📊</span> Dashboard</a>
@@ -289,9 +289,9 @@ tr:hover td{background:#fafafa}
 
 <script>
 // ── CONFIG ───────────────────────────────────────────────────────────────────
-const SUPABASE_URL  = 'SEU_SUPABASE_URL';
-const SUPABASE_KEY  = 'SUA_SUPABASE_ANON_KEY';
-const ADMIN_PWD     = '123456' //'SUA_SENHA_ADMIN';   // trocar antes de publicar
+const SUPABASE_URL  = 'https://hgsekgeijgklrategzew.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVgemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
+const ADMIN_PWD     = '123456';
 
 let sb = null;
 try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) {}
