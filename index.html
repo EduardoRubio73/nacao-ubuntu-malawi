@@ -13,13 +13,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://unpkg.com/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
-<script>
-// Fallback: se unpkg falhar, tenta jsdelivr
-if (typeof window.supabase === 'undefined') {
-  document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"><\/script>');
-}
-</script>
 
 <style>
 /* ── RESET ── */
@@ -543,18 +536,51 @@ footer .quote{font-style:italic;color:var(--gold)!important;margin-top:12px!impo
 
 <script>
 // ── CONFIG ───────────────────────────────────────────────────────────────────
-var SUPABASE_URL = 'https://hgsekgeijgklrategzew.supabase.co';
-var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVnemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
+var SB_URL = 'https://hgsekgeijgklrategzew.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVnemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
 var PIX_KEY  = '06432680816';
 var PIX_NAME = 'Maria Izabel Moreno de So';
 var PIX_CITY = 'SAO PAULO';
 
-var supabase = null;
-try {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  console.log('Supabase inicializado OK');
-} catch(e) {
-  console.error('Supabase FALHOU ao inicializar:', e.message);
+// ── SUPABASE REST (sem biblioteca externa) ────────────────────────────────────
+var sbHeaders = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+async function sbInsert(table, payload) {
+  var res = await fetch(SB_URL + '/rest/v1/' + table, {
+    method: 'POST',
+    headers: sbHeaders,
+    body: JSON.stringify(payload)
+  });
+  var json = await res.json();
+  if (!res.ok) throw new Error(json.message || json.error || 'Erro ' + res.status);
+  return json;
+}
+
+async function sbUpload(bucket, filename, file) {
+  var res = await fetch(SB_URL + '/storage/v1/object/' + bucket + '/' + filename, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
+    body: file
+  });
+  if (!res.ok) {
+    var err = await res.json().catch(function(){ return {}; });
+    console.warn('Storage upload falhou:', err.message || res.status);
+    return null;
+  }
+  return filename;
+}
+
+async function sbSelect(table, query) {
+  var res = await fetch(SB_URL + '/rest/v1/' + table + '?' + query, {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  if (!res.ok) return null;
+  return res.json();
 }
 
 // ── STATE ────────────────────────────────────────────────────────────────────
@@ -738,23 +764,10 @@ async function sendDonation() {
   btn.textContent = 'Enviando...';
 
   try {
-    if (!supabase) throw new Error('Erro de conexão com o servidor. Recarregue a página e tente novamente.');
-
     // 1. Upload comprovante (opcional — não bloqueia o insert)
-    var receiptUrl  = null;
-    var receiptNome = uploadedFile.name;
-    try {
-      var ext   = uploadedFile.name.split('.').pop();
-      var fname = Date.now() + '_' + name.replace(/\s+/g,'_') + '.' + ext;
-      var up    = await supabase.storage.from('comprovantes').upload(fname, uploadedFile, { upsert: false });
-      if (up.error) {
-        console.warn('Storage upload falhou:', up.error.message);
-      } else {
-        receiptUrl = fname;
-      }
-    } catch(storageErr) {
-      console.warn('Storage erro:', storageErr);
-    }
+    var ext      = uploadedFile.name.split('.').pop();
+    var fname    = Date.now() + '_' + name.replace(/\s+/g,'_') + '.' + ext;
+    var receiptUrl = await sbUpload('comprovantes', fname, uploadedFile);
 
     // 2. Gravar doação na tabela
     var payload = {
@@ -764,18 +777,12 @@ async function sendDonation() {
       valor:            selectedAmt,
       status:           'pendente',
       comprovante_url:  receiptUrl,
-      comprovante_nome: receiptNome,
+      comprovante_nome: uploadedFile.name,
       pix_txid:         pixCode.slice(0, 100)
     };
 
-    var result = await supabase.from('doacoes').insert(payload).select();
-
-    if (result.error) {
-      console.error('Insert error:', result.error);
-      throw new Error(result.error.message || 'Erro ao salvar doação');
-    }
-
-    console.log('Doação salva:', result.data);
+    var saved = await sbInsert('doacoes', payload);
+    console.log('Doação salva:', saved);
 
     // 3. Sucesso
     document.getElementById('successName').textContent = name.split(' ')[0];
@@ -825,13 +832,12 @@ if ('serviceWorker' in navigator) {
 
 // ── PROGRESS ─────────────────────────────────────────────────────────────────
 async function loadProgress() {
-  if (!supabase) return;
   try {
-    var r1  = await supabase.from('total_arrecadado').select('*').single();
-    var r2  = await supabase.from('configuracoes').select('valor').eq('chave','meta_valor').single();
-    if (!r1.data || !r2.data) return;
-    var total = parseFloat(r1.data.total) || 0;
-    var meta  = parseFloat(r2.data.valor) || 50000;
+    var r1 = await sbSelect('total_arrecadado', 'select=total&limit=1');
+    var r2 = await sbSelect('configuracoes', 'select=valor&chave=eq.meta_valor&limit=1');
+    if (!r1 || !r1[0] || !r2 || !r2[0]) return;
+    var total = parseFloat(r1[0].total) || 0;
+    var meta  = parseFloat(r2[0].valor) || 50000;
     var pct   = Math.min(100, (total / meta) * 100).toFixed(1);
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressTxt').textContent =
