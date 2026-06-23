@@ -7,6 +7,7 @@
 <meta name="description" content="Doe medicamentos ou faça uma contribuição PIX para a Caravana da Saúde 2026 no Malawi."/>
 <meta name="theme-color" content="#2a0055"/>
 <link rel="manifest" href="/public/manifest.json"/>
+<link rel="icon" href="/public/icons/icon-16x16.png"/>
 <link rel="icon" href="/public/icons/icon-32x32.png"/>
 <link rel="apple-touch-icon" href="/public/icons/icon-180x180.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -536,28 +537,26 @@ footer .quote{font-style:italic;color:var(--gold)!important;margin-top:12px!impo
 
 <script>
 // ── CONFIG ───────────────────────────────────────────────────────────────────
-const SUPABASE_URL  = 'https://hgsekgeijgklrategzew.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVnemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
-const PIX_KEY       = '06432680816';
-const PIX_NAME      = 'Maria Izabel Moreno de So';
-const PIX_CITY      = 'SAO PAULO';
-const PIX_DESC      = '';
+var SUPABASE_URL = 'https://hgsekgeijgklrategzew.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhnc2VrZ2VpamdrbHJhdGVnemV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxOTE4MzMsImV4cCI6MjA5Nzc2NzgzM30.T03gW_Pq9McNyjh1Zvej2qDwSDVUw1kyA3h5AQ5yDUA';
+var PIX_KEY  = '06432680816';
+var PIX_NAME = 'Maria Izabel Moreno de So';
+var PIX_CITY = 'SAO PAULO';
 
-let supabase = null;
+var supabase = null;
 try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) {}
 
 // ── STATE ────────────────────────────────────────────────────────────────────
-let selectedAmt = 0;
-let currentStep = 1;
-let uploadedFile = null;
-let pixCode = '';
+var selectedAmt  = 0;
+var uploadedFile = null;
+var pixCode      = '';
 
 // ── PIX EMV GENERATOR ────────────────────────────────────────────────────────
 function crc16(str) {
-  let crc = 0xFFFF;
-  for (let i = 0; i < str.length; i++) {
+  var crc = 0xFFFF;
+  for (var i = 0; i < str.length; i++) {
     crc ^= str.charCodeAt(i) << 8;
-    for (let j = 0; j < 8; j++)
+    for (var j = 0; j < 8; j++)
       crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
   }
   return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4,'0');
@@ -567,34 +566,33 @@ function tlv(id, val) {
   return id + String(val.length).padStart(2,'0') + val;
 }
 
-function buildPix(key, name, city, amount, desc, txid) {
-  const merchant = tlv('26',
-    tlv('00','BR.GOV.BCB.PIX') +
-    tlv('01', key) +
-    (desc ? tlv('02', desc.substring(0, 72)) : '')
-  );
-  const amtStr  = amount > 0 ? tlv('54', amount.toFixed(2)) : '';
-  const txField = tlv('62', tlv('05', (txid||'malawi2026').substring(0,25)));
-  const body =
+function buildPix(amount) {
+  // Gera txid de 10 chars (campo 05 do Additional Data)
+  var txid = 'MALAWI' + String(Date.now()).slice(-4);
+  var merchantInfo =
+    tlv('00', 'BR.GOV.BCB.PIX') +
+    tlv('01', PIX_KEY);
+  var body =
     '000201' +
-    merchant +
-    tlv('52','0000') +
-    tlv('53','986') +
-    amtStr +
-    tlv('58','BR') +
-    tlv('59', name.substring(0,25)) +
-    tlv('60', city.substring(0,15)) +
-    txField +
+    tlv('26', merchantInfo) +
+    tlv('52', '0000') +
+    tlv('53', '986') +
+    tlv('54', amount.toFixed(2)) +
+    tlv('58', 'BR') +
+    tlv('59', PIX_NAME) +
+    tlv('60', PIX_CITY) +
+    tlv('62', tlv('05', txid)) +
     '6304';
   return body + crc16(body);
 }
 
 // ── AMOUNT SELECT ────────────────────────────────────────────────────────────
-function selectAmt(val, el) {
-  const btn = (el.closest && el.closest('.amt-btn')) || el;
-  document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+function selectAmt(btn, val) {
+  // Limpa seleção anterior
+  var btns = document.querySelectorAll('.amt-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected');
   btn.classList.add('selected');
-  el = btn;
+
   if (val === 0) {
     document.getElementById('customAmt').style.display = 'flex';
     document.getElementById('outroVal').textContent = 'Outro';
@@ -603,141 +601,154 @@ function selectAmt(val, el) {
     document.getElementById('customAmt').style.display = 'none';
     selectedAmt = val;
   }
-  document.getElementById('btnNext1').disabled = selectedAmt <= 0;
+  document.getElementById('btnNext1').disabled = (selectedAmt <= 0);
 }
-
-// Script está no fim do <body> — DOM existe, sem DOMContentLoaded necessário
-document.querySelectorAll('.amt-btn').forEach(btn => {
-  btn.addEventListener('click', () => selectAmt(+(btn.dataset.amt ?? 0), btn));
-});
-
-document.getElementById('medModalBtn').addEventListener('click', openMedModal);
-
-const _medModal = document.getElementById('medModal');
-document.getElementById('medModalClose').addEventListener('click', () => {
-  _medModal.style.display = 'none';
-  document.body.style.overflow = '';
-});
-_medModal.addEventListener('click', (e) => {
-  if (e.target === _medModal) {
-    _medModal.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-});
 
 function setCustomAmt(v) {
   selectedAmt = parseFloat(v) || 0;
-  document.getElementById('btnNext1').disabled = selectedAmt <= 0;
-  if (selectedAmt > 0) document.getElementById('outroVal').textContent = `R$ ${selectedAmt.toLocaleString('pt-BR')}`;
+  document.getElementById('btnNext1').disabled = (selectedAmt <= 0);
+  if (selectedAmt > 0)
+    document.getElementById('outroVal').textContent = 'R$ ' + selectedAmt.toLocaleString('pt-BR');
 }
+
+// Bind amount buttons
+(function() {
+  var btns = document.querySelectorAll('.amt-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      var val = parseInt(btn.getAttribute('data-amt'), 10) || 0;
+      btn.onclick = function() { selectAmt(btn, val); };
+    })(btns[i]);
+  }
+})();
 
 // ── STEPS ────────────────────────────────────────────────────────────────────
 function goStep(n) {
-  if (n === 2 && selectedAmt <= 0) return;
+  if (n === 2 && selectedAmt <= 0) { showToast('Selecione um valor primeiro'); return; }
   if (n > 4) return;
-  currentStep = n;
-  document.querySelectorAll('.step-panel').forEach((p,i) => p.classList.toggle('active', i===n-1));
-  document.querySelectorAll('.step').forEach((s,i) => {
-    s.classList.toggle('active', i===n-1);
-    s.classList.toggle('done', i < n-1);
-  });
+
+  var panels = document.querySelectorAll('.step-panel');
+  for (var i = 0; i < panels.length; i++)
+    panels[i].classList.toggle('active', i === n - 1);
+
+  var steps = document.querySelectorAll('.step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].classList.toggle('active', i === n - 1);
+    steps[i].classList.toggle('done', i < n - 1);
+  }
+
   if (n === 2) renderPix();
-  window.scrollTo({top: document.getElementById('doe').offsetTop - 80, behavior:'smooth'});
+  var top = document.getElementById('doe').offsetTop - 80;
+  window.scrollTo({ top: top, behavior: 'smooth' });
 }
 
 function renderPix() {
-  const fmt = selectedAmt.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+  var fmt = selectedAmt.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   document.getElementById('displayAmt').textContent = fmt;
-  const txid = 'MALAWI' + Date.now().toString().slice(-8);
-  pixCode = buildPix(PIX_KEY, PIX_NAME, PIX_CITY, selectedAmt, PIX_DESC, txid);
+
+  pixCode = buildPix(selectedAmt);
   document.getElementById('pixCodeVal').textContent = pixCode;
+
   // QR Code
-  const el = document.getElementById('qrcode');
+  var el = document.getElementById('qrcode');
   el.innerHTML = '';
-  new QRCode(el, { text: pixCode, width:200, height:200, colorDark:'#2a0055', colorLight:'#ffffff', correctLevel: QRCode.CorrectLevel.H });
+  try {
+    new QRCode(el, {
+      text: pixCode, width: 200, height: 200,
+      colorDark: '#2a0055', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) { el.textContent = ''; }
 }
 
 // ── COPY PIX ─────────────────────────────────────────────────────────────────
 function copyPix() {
-  navigator.clipboard.writeText(pixCode).then(()=>{
-    const btn = document.getElementById('copyBtn');
+  var btn = document.getElementById('copyBtn');
+  function onCopied() {
     btn.textContent = '✓ Código copiado!';
     btn.classList.add('copied');
-    setTimeout(()=>{ btn.textContent='📋 Copiar código PIX'; btn.classList.remove('copied'); }, 3000);
-  }).catch(()=>{
-    const ta = document.createElement('textarea');
-    ta.value = pixCode; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-    showToast('✓ Copiado!');
-  });
+    showToast('✓ Código PIX copiado!');
+    setTimeout(function() {
+      btn.textContent = '📋 Copiar código PIX';
+      btn.classList.remove('copied');
+    }, 3000);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(pixCode).then(onCopied).catch(fallbackCopy);
+  } else { fallbackCopy(); }
+
+  function fallbackCopy() {
+    var ta = document.createElement('textarea');
+    ta.value = pixCode;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); onCopied(); } catch(e) {}
+    document.body.removeChild(ta);
+  }
 }
 
 // ── FILE UPLOAD ──────────────────────────────────────────────────────────────
 function handleDrop(e) {
   e.preventDefault();
   document.getElementById('uploadZone').classList.remove('drag');
-  const f = e.dataTransfer.files[0];
+  var f = e.dataTransfer.files[0];
   if (f) handleFile(f);
 }
 
 function handleFile(file) {
   if (!file) return;
-  if (file.size > 5*1024*1024) { showToast('❌ Arquivo muito grande (máx 5MB)'); return; }
+  if (file.size > 5 * 1024 * 1024) { showToast('❌ Arquivo muito grande (máx 5MB)'); return; }
   uploadedFile = file;
   document.getElementById('fileName').textContent = file.name;
-  document.getElementById('fileSize').textContent = (file.size/1024).toFixed(0) + ' KB';
+  document.getElementById('fileSize').textContent = Math.round(file.size / 1024) + ' KB';
   document.getElementById('filePreview').classList.add('show');
   checkSendReady();
 }
 
 function checkSendReady() {
-  const name = document.getElementById('donorName').value.trim();
-  const phone = document.getElementById('donorPhone').value.trim();
+  var name  = document.getElementById('donorName').value.trim();
+  var phone = document.getElementById('donorPhone').value.trim();
   document.getElementById('btnSend').disabled = !(name && phone && uploadedFile);
 }
 
-document.addEventListener('input', e => {
-  if (['donorName','donorPhone','donorEmail'].includes(e.target.id)) checkSendReady();
+document.addEventListener('input', function(e) {
+  if (e.target.id === 'donorName' || e.target.id === 'donorPhone') checkSendReady();
 });
 
 // ── SEND DONATION ─────────────────────────────────────────────────────────────
 async function sendDonation() {
-  const btn = document.getElementById('btnSend');
-  const name  = document.getElementById('donorName').value.trim();
-  const phone = document.getElementById('donorPhone').value.trim();
-  const email = document.getElementById('donorEmail').value.trim();
+  var btn   = document.getElementById('btnSend');
+  var name  = document.getElementById('donorName').value.trim();
+  var phone = document.getElementById('donorPhone').value.trim();
+  var email = document.getElementById('donorEmail').value.trim();
   if (!name || !phone || !uploadedFile) return;
 
   btn.disabled = true;
   btn.textContent = 'Enviando...';
 
   try {
-    let receiptUrl = null;
-    let receiptName = null;
+    var receiptUrl = null;
+    if (supabase) {
+      var ext   = uploadedFile.name.split('.').pop();
+      var fname = Date.now() + '_' + name.replace(/\s+/g,'_') + '.' + ext;
+      var up    = await supabase.storage.from('comprovantes').upload(fname, uploadedFile, { upsert: false });
+      if (!up.error) receiptUrl = fname;
 
-    // Upload comprovante to Supabase Storage
-    if (supabase && SUPABASE_URL !== 'SEU_SUPABASE_URL') {
-      const ext = uploadedFile.name.split('.').pop();
-      const fname = `${Date.now()}_${name.replace(/\s/g,'_')}.${ext}`;
-      const { data: up, error: ue } = await supabase.storage
-        .from('comprovantes').upload(fname, uploadedFile, { upsert: false });
-      if (!ue) { receiptUrl = fname; receiptName = uploadedFile.name; }
-
-      // Save donation record
       await supabase.from('doacoes').insert({
         nome: name, telefone: phone, email: email || null,
         valor: selectedAmt, status: 'pendente',
-        comprovante_url: receiptUrl, comprovante_nome: receiptName,
-        pix_txid: 'MALAWI' + Date.now().toString().slice(-8)
+        comprovante_url: receiptUrl,
+        comprovante_nome: uploadedFile.name,
+        pix_txid: pixCode.slice(0, 40)
       });
     }
 
-    // Show success
     document.getElementById('successName').textContent = name.split(' ')[0];
     document.getElementById('successAmt').textContent =
-      selectedAmt.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+      selectedAmt.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     goStep(4);
-    document.querySelectorAll('.step').forEach(s => s.style.display='none');
+    var steps = document.querySelectorAll('.step');
+    for (var i = 0; i < steps.length; i++) steps[i].style.display = 'none';
 
   } catch(err) {
     console.error(err);
@@ -748,10 +759,11 @@ async function sendDonation() {
 }
 
 // ── TOAST ────────────────────────────────────────────────────────────────────
-function showToast(msg, dur=3000) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), dur);
+function showToast(msg, dur) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, dur || 3000);
 }
 
 // ── MODAL MEDICAMENTOS ───────────────────────────────────────────────────────
@@ -765,27 +777,32 @@ function closeMedModal(e) {
     document.body.style.overflow = '';
   }
 }
+document.getElementById('medModalBtn').onclick = openMedModal;
+document.getElementById('medModalClose').onclick = function() {
+  document.getElementById('medModal').style.display = 'none';
+  document.body.style.overflow = '';
+};
 
 // ── PWA ──────────────────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/public/sw.js').then(reg => {
-    if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
-  }).catch(() => {});
+  navigator.serviceWorker.register('/public/sw.js').catch(function(){});
 }
 
-// ── Load progress from Supabase ───────────────────────────────────────────────
+// ── PROGRESS ─────────────────────────────────────────────────────────────────
 async function loadProgress() {
-  if (!supabase || SUPABASE_URL === 'SEU_SUPABASE_URL') return;
+  if (!supabase) return;
   try {
-    const { data } = await supabase.from('total_arrecadado').select('*').single();
-    const { data: cfg } = await supabase.from('configuracoes').select('valor').eq('chave','meta_valor').single();
-    if (!data || !cfg) return;
-    const total = parseFloat(data.total) || 0;
-    const meta  = parseFloat(cfg.valor) || 50000;
-    const pct   = Math.min(100, (total/meta)*100).toFixed(1);
+    var r1  = await supabase.from('total_arrecadado').select('*').single();
+    var r2  = await supabase.from('configuracoes').select('valor').eq('chave','meta_valor').single();
+    if (!r1.data || !r2.data) return;
+    var total = parseFloat(r1.data.total) || 0;
+    var meta  = parseFloat(r2.data.valor) || 50000;
+    var pct   = Math.min(100, (total / meta) * 100).toFixed(1);
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressTxt').textContent =
-      `${total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} de ${meta.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} (${pct}%)`;
+      total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) +
+      ' de ' + meta.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) +
+      ' (' + pct + '%)';
     document.getElementById('progressWrap').style.display = 'block';
   } catch(e) {}
 }
