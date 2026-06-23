@@ -373,27 +373,27 @@ footer .quote{font-style:italic;color:var(--gold)!important;margin-top:12px!impo
       <div class="step-panel active" id="panel1">
         <p class="amounts-title">Selecione o valor da doação:</p>
         <div class="amounts-grid">
-          <button class="amt-btn" onclick="selectAmt(500, this)">
+          <button class="amt-btn" data-amt="500" onclick="selectAmt(500, this)">
             <span class="amt-val">R$ 500</span>
             <span class="amt-label">Alimenta 15 famílias</span>
           </button>
-          <button class="amt-btn" onclick="selectAmt(750, this)">
+          <button class="amt-btn" data-amt="750" onclick="selectAmt(750, this)">
             <span class="amt-val">R$ 750</span>
             <span class="amt-label">Kit medicamentos</span>
           </button>
-          <button class="amt-btn" onclick="selectAmt(1000, this)">
+          <button class="amt-btn" data-amt="1000" onclick="selectAmt(1000, this)">
             <span class="amt-val">R$ 1.000</span>
             <span class="amt-label">Cuida de 30 crianças</span>
           </button>
-          <button class="amt-btn" onclick="selectAmt(1500, this)">
+          <button class="amt-btn" data-amt="1500" onclick="selectAmt(1500, this)">
             <span class="amt-val">R$ 1.500</span>
             <span class="amt-label">Antibióticos + Vitaminas</span>
           </button>
-          <button class="amt-btn" onclick="selectAmt(2000, this)">
+          <button class="amt-btn" data-amt="2000" onclick="selectAmt(2000, this)">
             <span class="amt-val">R$ 2.000</span>
             <span class="amt-label">Kit completo de saúde</span>
           </button>
-          <button class="amt-btn" onclick="selectAmt(0, this)" id="btnOutro">
+          <button class="amt-btn" data-amt="0" onclick="selectAmt(0, this)" id="btnOutro">
             <span class="amt-val" id="outroVal">Outro</span>
             <span class="amt-label">Valor personalizado</span>
           </button>
@@ -606,6 +606,14 @@ function selectAmt(val, el) {
   document.getElementById('btnNext1').disabled = selectedAmt <= 0;
 }
 
+// backup: event delegation para garantir que os cards respondam ao clique
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('panel1').addEventListener('click', (e) => {
+    const btn = e.target.closest('.amt-btn');
+    if (btn) selectAmt(+(btn.dataset.amt ?? 0), btn);
+  });
+});
+
 function setCustomAmt(v) {
   selectedAmt = parseFloat(v) || 0;
   document.getElementById('btnNext1').disabled = selectedAmt <= 0;
@@ -748,8 +756,21 @@ function closeMedModal(e) {
 }
 
 // ── PWA ──────────────────────────────────────────────────────────────────────
-if ('serviceWorker' in navigator)
-  navigator.serviceWorker.register('/public/sw.js').catch(()=>{});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/public/sw.js').then(reg => {
+    if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      nw.addEventListener('statechange', () => {
+        if (nw.state === 'installed') nw.postMessage({ type: 'SKIP_WAITING' });
+      });
+    });
+  }).catch(() => {});
+  let _reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!_reloading) { _reloading = true; window.location.reload(); }
+  });
+}
 
 // ── Load progress from Supabase ───────────────────────────────────────────────
 async function loadProgress() {
