@@ -156,6 +156,15 @@ body{
 }
 .wa-note{font-size:6.5pt;color:rgba(255,255,255,.5);margin-top:2.5mm;line-height:1.5}
 
+/* Discrete contact */
+.contact-small{
+  border-top:0.3mm solid rgba(42,0,85,.1);padding-top:4mm;margin-top:auto;
+}
+.contact-small .cs-label{font-size:6pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:1.5mm}
+.contact-small .cs-name{font-size:9pt;font-weight:700;color:var(--purple)}
+.contact-small .cs-phone{font-size:8.5pt;color:#555;margin-bottom:1mm}
+.contact-small .cs-note{font-size:6.5pt;color:#888;line-height:1.5}
+
 /* ── Right column ── */
 .col-right{
   padding:10mm 14mm 10mm 10mm;
@@ -170,10 +179,11 @@ body{
 }
 .qr-heading p{font-size:7.5pt;color:#666;line-height:1.5}
 .qr-box{
-  background:#fff;border:1mm solid rgba(42,0,85,.15);
-  border-radius:5mm;padding:4mm;
-  box-shadow:0 2mm 8mm rgba(42,0,85,.12);
+  background:#fff;border:1.5mm solid rgba(42,0,85,.2);
+  border-radius:5mm;padding:5mm;
+  box-shadow:0 3mm 12mm rgba(42,0,85,.18);
   margin-bottom:4mm;
+  display:flex;align-items:center;justify-content:center;
 }
 .qr-url{
   font-size:7.5pt;color:#888;text-align:center;
@@ -243,6 +253,7 @@ body{
   .no-print{display:none}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -266,7 +277,7 @@ body{
         <div class="title-sub">Doe Esperança.</div>
         <div class="malawi-label">— NAÇÃO UBUNTU MALAWI —</div>
         <p class="header-desc">
-          Sua doação leva <strong>saúde, cuidado e dignidade</strong> para adultos e crianças que vivem em situação de extrema vulnerabilidade social na África. Cada medicamento conta. Cada real transforma.
+          Cada medicamento enviado é uma vida protegida. Doe saúde para quem mais precisa.
         </p>
       </div>
     </div>
@@ -289,9 +300,11 @@ body{
         <div class="copy-title">Crianças merecem<br>crescer com saúde</div>
         <div class="divider"></div>
         <p class="copy-body">
-          O Malawi é um dos países mais pobres do mundo. Milhares de pessoas vivem em campos de refugiados sem acesso a medicamentos básicos, sem vitaminas, sem cuidados preventivos.<br><br>
-          A <strong>Caravana da Saúde 2026</strong>, iniciativa da <strong>Fraternidade Sem Fronteiras</strong>, vai levar uma missão humanitária completa: medicamentos, suplementos e cuidados de saúde para comunidades que não têm acesso a nenhum recurso.<br><br>
-          <strong>Você pode ser parte disso.</strong> Uma doação de medicamentos ou uma contribuição financeira vira esperança real para quem mais precisa.
+          O Malawi figura entre os países mais pobres do mundo. Em campos de refugiados,
+          crianças crescem sem acesso a antibióticos, vitaminas ou cuidados preventivos básicos.<br><br>
+          A <strong>Caravana da Saúde 2026</strong> chega em setembro com medicamentos,
+          suplementos e assistência médica para comunidades sem nenhum recurso.
+          <strong>Você pode ser parte disso.</strong>
         </p>
       </div>
 
@@ -315,17 +328,14 @@ body{
         </div>
       </div>
 
-      <div class="section-eyebrow" style="margin-bottom:2mm">✦ Doe medicamentos</div>
-      <div class="wa-box">
-        <div class="wa-label">Contato para coleta · WhatsApp</div>
-        <div class="wa-name">Izabel</div>
-        <div class="wa-phone">(15) 99601-6655</div>
-        <div class="wa-badge">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 17.563A9.932 9.932 0 0 1 12 21.9c-1.686 0-3.278-.42-4.676-1.162l-3.354.879.9-3.278A9.908 9.908 0 0 1 2.1 12C2.1 6.537 6.537 2.1 12 2.1c5.462 0 9.9 4.437 9.9 9.9 0 2.633-1.025 5.024-2.691 6.78l-.647-.917z"/></svg>
-          Enviar mensagem pelo WhatsApp
-        </div>
-        <div class="wa-note">Aceitamos medicamentos dentro do prazo de validade e amostras de representantes laboratoriais. As doações podem ser retiradas diretamente no consultório.</div>
+      <div class="contact-small">
+        <div class="cs-label">📦 Doação de medicamentos · WhatsApp</div>
+        <div class="cs-name">Izabel</div>
+        <div class="cs-phone">(15) 99601-6655</div>
+        <div class="cs-note">Medicamentos dentro do prazo · amostras de laboratório bem-vindas</div>
       </div>
+
+    </div>
 
     </div>
 
@@ -338,38 +348,28 @@ body{
       </div>
 
       <div class="qr-box">
-        <svg width="148" height="148" viewBox="0 0 370 370" xmlns="http://www.w3.org/2000/svg">
-          <rect width="370" height="370" fill="white"/>
-          <path fill="#2a0055" d="M20,20h10v10h-10Z M30,20h10v10h-10Z M40,20h10v10h-10Z M50,20h10v10h-10Z M60,20h10v10h-10Z M70,20h10v10h-10Z M80,20h10v10h-10Z M100,20h10v10h-10Z M110,20h10v10h-10Z M120,20h10v10h-10Z M140,20h10v10h-10Z M160,20h10v10h-10Z M190,20h10v10h-10Z M200,20h10v10h-10Z M210,20h10v10h-10Z M250,20h10v10h-10Z M260,20h10v10h-10Z M280,20h10v10h-10Z M290,20h10v10h-10Z M300,20h10v10h-10Z M310,20h10v10h-10Z M320,20h10v10h-10Z M330,20h10v10h-10Z M340,20h10v10h-10Z M20,30h10v10h-10Z M80,30h10v10h-10Z M100,30h10v10h-10Z M110,30h10v10h-10Z M120,30h10v10h-10Z M130,30h10v10h-10Z M170,30h10v10h-10Z M180,30h10v10h-10Z M190,30h10v10h-10Z M200,30h10v10h-10Z M210,30h10v10h-10Z M240,30h10v10h-10Z M260,30h10v10h-10Z M280,30h10v10h-10Z M340,30h10v10h-10Z M20,40h10v10h-10Z M40,40h10v10h-10Z M50,40h10v10h-10Z M60,40h10v10h-10Z M80,40h10v10h-10Z M100,40h10v10h-10Z M120,40h10v10h-10Z M140,40h10v10h-10Z M190,40h10v10h-10Z M220,40h10v10h-10Z M230,40h10v10h-10Z M240,40h10v10h-10Z M250,40h10v10h-10Z M260,40h10v10h-10Z M280,40h10v10h-10Z M300,40h10v10h-10Z M310,40h10v10h-10Z M320,40h10v10h-10Z M340,40h10v10h-10Z M20,50h10v10h-10Z M40,50h10v10h-10Z M50,50h10v10h-10Z M60,50h10v10h-10Z M80,50h10v10h-10Z M110,50h10v10h-10Z M120,50h10v10h-10Z M150,50h10v10h-10Z M180,50h10v10h-10Z M210,50h10v10h-10Z M240,50h10v10h-10Z M250,50h10v10h-10Z M260,50h10v10h-10Z M280,50h10v10h-10Z M300,50h10v10h-10Z M310,50h10v10h-10Z M320,50h10v10h-10Z M340,50h10v10h-10Z M20,60h10v10h-10Z M40,60h10v10h-10Z M50,60h10v10h-10Z M60,60h10v10h-10Z M80,60h10v10h-10Z M110,60h10v10h-10Z M130,60h10v10h-10Z M170,60h10v10h-10Z M180,60h10v10h-10Z M190,60h10v10h-10Z M210,60h10v10h-10Z M230,60h10v10h-10Z M250,60h10v10h-10Z M260,60h10v10h-10Z M280,60h10v10h-10Z M300,60h10v10h-10Z M310,60h10v10h-10Z M320,60h10v10h-10Z M340,60h10v10h-10Z M20,70h10v10h-10Z M80,70h10v10h-10Z M100,70h10v10h-10Z M170,70h10v10h-10Z M180,70h10v10h-10Z M210,70h10v10h-10Z M220,70h10v10h-10Z M230,70h10v10h-10Z M240,70h10v10h-10Z M260,70h10v10h-10Z M280,70h10v10h-10Z M340,70h10v10h-10Z M20,80h10v10h-10Z M30,80h10v10h-10Z M40,80h10v10h-10Z M50,80h10v10h-10Z M60,80h10v10h-10Z M70,80h10v10h-10Z M80,80h10v10h-10Z M100,80h10v10h-10Z M120,80h10v10h-10Z M140,80h10v10h-10Z M160,80h10v10h-10Z M180,80h10v10h-10Z M200,80h10v10h-10Z M220,80h10v10h-10Z M240,80h10v10h-10Z M260,80h10v10h-10Z M280,80h10v10h-10Z M290,80h10v10h-10Z M300,80h10v10h-10Z M310,80h10v10h-10Z M320,80h10v10h-10Z M330,80h10v10h-10Z M340,80h10v10h-10Z M100,90h10v10h-10Z M110,90h10v10h-10Z M120,90h10v10h-10Z M150,90h10v10h-10Z M180,90h10v10h-10Z M210,90h10v10h-10Z M220,90h10v10h-10Z M230,90h10v10h-10Z M240,90h10v10h-10Z M260,90h10v10h-10Z M40,100h10v10h-10Z M50,100h10v10h-10Z M60,100h10v10h-10Z M80,100h10v10h-10Z M100,100h10v10h-10Z M130,100h10v10h-10Z M150,100h10v10h-10Z M170,100h10v10h-10Z M180,100h10v10h-10Z M210,100h10v10h-10Z M220,100h10v10h-10Z M240,100h10v10h-10Z M260,100h10v10h-10Z M270,100h10v10h-10Z M280,100h10v10h-10Z M290,100h10v10h-10Z M320,100h10v10h-10Z M330,100h10v10h-10Z M340,100h10v10h-10Z M30,110h10v10h-10Z M50,110h10v10h-10Z M60,110h10v10h-10Z M90,110h10v10h-10Z M100,110h10v10h-10Z M110,110h10v10h-10Z M140,110h10v10h-10Z M150,110h10v10h-10Z M170,110h10v10h-10Z M200,110h10v10h-10Z M210,110h10v10h-10Z M220,110h10v10h-10Z M240,110h10v10h-10Z M250,110h10v10h-10Z M270,110h10v10h-10Z M280,110h10v10h-10Z M310,110h10v10h-10Z M330,110h10v10h-10Z M340,110h10v10h-10Z M20,120h10v10h-10Z M30,120h10v10h-10Z M40,120h10v10h-10Z M50,120h10v10h-10Z M70,120h10v10h-10Z M80,120h10v10h-10Z M110,120h10v10h-10Z M150,120h10v10h-10Z M170,120h10v10h-10Z M190,120h10v10h-10Z M220,120h10v10h-10Z M240,120h10v10h-10Z M260,120h10v10h-10Z M280,120h10v10h-10Z M290,120h10v10h-10Z M320,120h10v10h-10Z M330,120h10v10h-10Z M20,130h10v10h-10Z M60,130h10v10h-10Z M70,130h10v10h-10Z M90,130h10v10h-10Z M110,130h10v10h-10Z M120,130h10v10h-10Z M130,130h10v10h-10Z M140,130h10v10h-10Z M160,130h10v10h-10Z M170,130h10v10h-10Z M180,130h10v10h-10Z M200,130h10v10h-10Z M210,130h10v10h-10Z M220,130h10v10h-10Z M230,130h10v10h-10Z M240,130h10v10h-10Z M250,130h10v10h-10Z M280,130h10v10h-10Z M310,130h10v10h-10Z M320,130h10v10h-10Z M40,140h10v10h-10Z M50,140h10v10h-10Z M70,140h10v10h-10Z M80,140h10v10h-10Z M100,140h10v10h-10Z M140,140h10v10h-10Z M150,140h10v10h-10Z M160,140h10v10h-10Z M200,140h10v10h-10Z M220,140h10v10h-10Z M230,140h10v10h-10Z M260,140h10v10h-10Z M270,140h10v10h-10Z M290,140h10v10h-10Z M300,140h10v10h-10Z M20,150h10v10h-10Z M30,150h10v10h-10Z M50,150h10v10h-10Z M90,150h10v10h-10Z M100,150h10v10h-10Z M110,150h10v10h-10Z M120,150h10v10h-10Z M140,150h10v10h-10Z M160,150h10v10h-10Z M180,150h10v10h-10Z M210,150h10v10h-10Z M250,150h10v10h-10Z M280,150h10v10h-10Z M310,150h10v10h-10Z M320,150h10v10h-10Z M340,150h10v10h-10Z M30,160h10v10h-10Z M40,160h10v10h-10Z M80,160h10v10h-10Z M110,160h10v10h-10Z M140,160h10v10h-10Z M150,160h10v10h-10Z M160,160h10v10h-10Z M170,160h10v10h-10Z M200,160h10v10h-10Z M240,160h10v10h-10Z M260,160h10v10h-10Z M280,160h10v10h-10Z M290,160h10v10h-10Z M300,160h10v10h-10Z M310,160h10v10h-10Z M320,160h10v10h-10Z M330,160h10v10h-10Z M30,170h10v10h-10Z M50,170h10v10h-10Z M60,170h10v10h-10Z M70,170h10v10h-10Z M100,170h10v10h-10Z M110,170h10v10h-10Z M120,170h10v10h-10Z M140,170h10v10h-10Z M160,170h10v10h-10Z M190,170h10v10h-10Z M200,170h10v10h-10Z M230,170h10v10h-10Z M240,170h10v10h-10Z M270,170h10v10h-10Z M300,170h10v10h-10Z M310,170h10v10h-10Z M320,170h10v10h-10Z M330,170h10v10h-10Z M20,180h10v10h-10Z M40,180h10v10h-10Z M70,180h10v10h-10Z M80,180h10v10h-10Z M100,180h10v10h-10Z M120,180h10v10h-10Z M130,180h10v10h-10Z M150,180h10v10h-10Z M160,180h10v10h-10Z M180,180h10v10h-10Z M200,180h10v10h-10Z M210,180h10v10h-10Z M290,180h10v10h-10Z M300,180h10v10h-10Z M30,190h10v10h-10Z M40,190h10v10h-10Z M70,190h10v10h-10Z M110,190h10v10h-10Z M160,190h10v10h-10Z M180,190h10v10h-10Z M200,190h10v10h-10Z M210,190h10v10h-10Z M250,190h10v10h-10Z M260,190h10v10h-10Z M280,190h10v10h-10Z M340,190h10v10h-10Z M20,200h10v10h-10Z M30,200h10v10h-10Z M50,200h10v10h-10Z M60,200h10v10h-10Z M80,200h10v10h-10Z M100,200h10v10h-10Z M120,200h10v10h-10Z M140,200h10v10h-10Z M170,200h10v10h-10Z M220,200h10v10h-10Z M230,200h10v10h-10Z M240,200h10v10h-10Z M300,200h10v10h-10Z M320,200h10v10h-10Z M330,200h10v10h-10Z M20,210h10v10h-10Z M30,210h10v10h-10Z M40,210h10v10h-10Z M60,210h10v10h-10Z M90,210h10v10h-10Z M140,210h10v10h-10Z M160,210h10v10h-10Z M200,210h10v10h-10Z M210,210h10v10h-10Z M220,210h10v10h-10Z M230,210h10v10h-10Z M240,210h10v10h-10Z M250,210h10v10h-10Z M260,210h10v10h-10Z M270,210h10v10h-10Z M310,210h10v10h-10Z M320,210h10v10h-10Z M330,210h10v10h-10Z M340,210h10v10h-10Z M20,220h10v10h-10Z M40,220h10v10h-10Z M70,220h10v10h-10Z M80,220h10v10h-10Z M130,220h10v10h-10Z M170,220h10v10h-10Z M190,220h10v10h-10Z M200,220h10v10h-10Z M210,220h10v10h-10Z M220,220h10v10h-10Z M240,220h10v10h-10Z M270,220h10v10h-10Z M290,220h10v10h-10Z M300,220h10v10h-10Z M310,220h10v10h-10Z M20,230h10v10h-10Z M30,230h10v10h-10Z M40,230h10v10h-10Z M50,230h10v10h-10Z M110,230h10v10h-10Z M120,230h10v10h-10Z M130,230h10v10h-10Z M150,230h10v10h-10Z M160,230h10v10h-10Z M180,230h10v10h-10Z M200,230h10v10h-10Z M210,230h10v10h-10Z M230,230h10v10h-10Z M250,230h10v10h-10Z M270,230h10v10h-10Z M280,230h10v10h-10Z M320,230h10v10h-10Z M340,230h10v10h-10Z M20,240h10v10h-10Z M50,240h10v10h-10Z M70,240h10v10h-10Z M80,240h10v10h-10Z M120,240h10v10h-10Z M140,240h10v10h-10Z M150,240h10v10h-10Z M260,240h10v10h-10Z M300,240h10v10h-10Z M330,240h10v10h-10Z M20,250h10v10h-10Z M40,250h10v10h-10Z M60,250h10v10h-10Z M90,250h10v10h-10Z M100,250h10v10h-10Z M120,250h10v10h-10Z M170,250h10v10h-10Z M190,250h10v10h-10Z M210,250h10v10h-10Z M220,250h10v10h-10Z M230,250h10v10h-10Z M260,250h10v10h-10Z M300,250h10v10h-10Z M310,250h10v10h-10Z M320,250h10v10h-10Z M330,250h10v10h-10Z M20,260h10v10h-10Z M40,260h10v10h-10Z M50,260h10v10h-10Z M80,260h10v10h-10Z M100,260h10v10h-10Z M210,260h10v10h-10Z M220,260h10v10h-10Z M240,260h10v10h-10Z M260,260h10v10h-10Z M270,260h10v10h-10Z M280,260h10v10h-10Z M290,260h10v10h-10Z M300,260h10v10h-10Z M100,270h10v10h-10Z M120,270h10v10h-10Z M160,270h10v10h-10Z M200,270h10v10h-10Z M210,270h10v10h-10Z M250,270h10v10h-10Z M260,270h10v10h-10Z M300,270h10v10h-10Z M320,270h10v10h-10Z M330,270h10v10h-10Z M340,270h10v10h-10Z M20,280h10v10h-10Z M30,280h10v10h-10Z M40,280h10v10h-10Z M50,280h10v10h-10Z M60,280h10v10h-10Z M70,280h10v10h-10Z M80,280h10v10h-10Z M110,280h10v10h-10Z M160,280h10v10h-10Z M200,280h10v10h-10Z M220,280h10v10h-10Z M240,280h10v10h-10Z M250,280h10v10h-10Z M260,280h10v10h-10Z M280,280h10v10h-10Z M300,280h10v10h-10Z M310,280h10v10h-10Z M320,280h10v10h-10Z M330,280h10v10h-10Z M20,290h10v10h-10Z M80,290h10v10h-10Z M120,290h10v10h-10Z M130,290h10v10h-10Z M140,290h10v10h-10Z M160,290h10v10h-10Z M170,290h10v10h-10Z M180,290h10v10h-10Z M210,290h10v10h-10Z M220,290h10v10h-10Z M250,290h10v10h-10Z M260,290h10v10h-10Z M300,290h10v10h-10Z M310,290h10v10h-10Z M320,290h10v10h-10Z M330,290h10v10h-10Z M340,290h10v10h-10Z M20,300h10v10h-10Z M40,300h10v10h-10Z M50,300h10v10h-10Z M60,300h10v10h-10Z M80,300h10v10h-10Z M100,300h10v10h-10Z M130,300h10v10h-10Z M140,300h10v10h-10Z M150,300h10v10h-10Z M180,300h10v10h-10Z M190,300h10v10h-10Z M210,300h10v10h-10Z M230,300h10v10h-10Z M240,300h10v10h-10Z M260,300h10v10h-10Z M270,300h10v10h-10Z M280,300h10v10h-10Z M290,300h10v10h-10Z M300,300h10v10h-10Z M310,300h10v10h-10Z M330,300h10v10h-10Z M340,300h10v10h-10Z M20,310h10v10h-10Z M40,310h10v10h-10Z M50,310h10v10h-10Z M60,310h10v10h-10Z M80,310h10v10h-10Z M100,310h10v10h-10Z M110,310h10v10h-10Z M130,310h10v10h-10Z M160,310h10v10h-10Z M170,310h10v10h-10Z M200,310h10v10h-10Z M210,310h10v10h-10Z M230,310h10v10h-10Z M270,310h10v10h-10Z M300,310h10v10h-10Z M310,310h10v10h-10Z M340,310h10v10h-10Z M20,320h10v10h-10Z M40,320h10v10h-10Z M50,320h10v10h-10Z M60,320h10v10h-10Z M80,320h10v10h-10Z M100,320h10v10h-10Z M110,320h10v10h-10Z M120,320h10v10h-10Z M130,320h10v10h-10Z M140,320h10v10h-10Z M160,320h10v10h-10Z M200,320h10v10h-10Z M220,320h10v10h-10Z M230,320h10v10h-10Z M240,320h10v10h-10Z M250,320h10v10h-10Z M270,320h10v10h-10Z M280,320h10v10h-10Z M320,320h10v10h-10Z M20,330h10v10h-10Z M80,330h10v10h-10Z M110,330h10v10h-10Z M120,330h10v10h-10Z M130,330h10v10h-10Z M140,330h10v10h-10Z M150,330h10v10h-10Z M160,330h10v10h-10Z M190,330h10v10h-10Z M200,330h10v10h-10Z M220,330h10v10h-10Z M250,330h10v10h-10Z M270,330h10v10h-10Z M290,330h10v10h-10Z M320,330h10v10h-10Z M20,340h10v10h-10Z M30,340h10v10h-10Z M40,340h10v10h-10Z M50,340h10v10h-10Z M60,340h10v10h-10Z M70,340h10v10h-10Z M80,340h10v10h-10Z M110,340h10v10h-10Z M130,340h10v10h-10Z M160,340h10v10h-10Z M190,340h10v10h-10Z M220,340h10v10h-10Z M250,340h10v10h-10Z M260,340h10v10h-10Z M270,340h10v10h-10Z M330,340h10v10h-10Z"/>
-        </svg>
+        <div id="qrcode-print"></div>
       </div>
-      <div class="qr-url">projetomalawi.vercel.app</div>
-
-      <div class="pix-box">
-        <div class="pix-label">Chave PIX para contribuição</div>
-        <div class="pix-key-val">06045503830</div>
-        <div class="pix-name">Ricardo Alves Marujo · CPF</div>
-      </div>
+      <div class="qr-url">nacao-ubuntu-malawi.vercel.app</div>
 
       <div class="how-steps">
-        <div class="how-title">✦ Como fazer via PIX no site</div>
+        <div class="how-title">✦ Como contribuir pelo site</div>
         <div class="how-step">
           <div class="how-num">1</div>
-          <div class="how-text"><strong>Escaneie o QR Code</strong> ao lado ou acesse <em>projetomalawi.vercel.app</em></div>
+          <div class="how-text"><strong>Escaneie o QR Code</strong> acima com seu celular</div>
         </div>
         <div class="how-step">
           <div class="how-num">2</div>
-          <div class="how-text"><strong>Escolha o valor</strong> (R$500, R$750, R$1.000, R$1.500, R$2.000 ou outro)</div>
+          <div class="how-text"><strong>Escolha o valor</strong> e copie o código PIX gerado</div>
         </div>
         <div class="how-step">
           <div class="how-num">3</div>
-          <div class="how-text"><strong>Copie o código PIX</strong> gerado automaticamente e pague no seu banco</div>
-        </div>
-        <div class="how-step">
-          <div class="how-num">4</div>
-          <div class="how-text"><strong>Envie o comprovante</strong> pelo site e nossa equipe confirma sua doação</div>
+          <div class="how-text"><strong>Pague no seu banco</strong> e envie o comprovante pelo site</div>
         </div>
       </div>
+
+    </div>
+  </div>
 
     </div>
   </div>
@@ -388,5 +388,13 @@ body{
   </div>
 
 </div>
+<script>
+new QRCode(document.getElementById('qrcode-print'), {
+  text: 'https://nacao-ubuntu-malawi.vercel.app',
+  width: 185, height: 185,
+  colorDark: '#2a0055', colorLight: '#ffffff',
+  correctLevel: QRCode.CorrectLevel.M
+});
+</script>
 </body>
 </html>
