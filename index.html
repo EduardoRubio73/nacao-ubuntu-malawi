@@ -480,9 +480,12 @@ footer .quote{font-style:italic;color:var(--gold)!important;margin-top:12px!impo
           <div class="success-icon">🌍💛</div>
           <h2>Obrigado, <span id="successName"></span>!</h2>
           <p>Sua doação de <strong id="successAmt"></strong> foi recebida com sucesso. Nossa equipe irá verificar e confirmar em breve. Que Deus abençoe você!</p>
-          <a href="https://wa.me/5515996016655?text=Olá%20Izabel!%20Acabei%20de%20fazer%20uma%20doação%20PIX%20para%20o%20Projeto%20Nação%20Ubuntu%20Malawi%20e%20enviei%20o%20comprovante%20pelo%20site." class="btn btn-primary" target="_blank">
+          <a href="https://wa.me/5515996016655?text=Olá%20Izabel!%20Acabei%20de%20fazer%20uma%20doação%20PIX%20para%20o%20Projeto%20Nação%20Ubuntu%20Malawi%20e%20enviei%20o%20comprovante%20pelo%20site." class="btn btn-primary" target="_blank" onclick="setTimeout(resetForm, 500)">
             💬 Avisar a Izabel pelo WhatsApp
           </a>
+          <button class="btn btn-outline" style="margin-top:12px;width:100%;justify-content:center" onclick="resetForm()">
+            ← Fazer nova doação
+          </button>
         </div>
       </div>
     </div>
@@ -564,7 +567,7 @@ async function sbInsert(table, payload) {
 async function sbUpload(bucket, filename, file) {
   var res = await fetch(SB_URL + '/storage/v1/object/' + bucket + '/' + filename, {
     method: 'POST',
-    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': file.type || 'application/octet-stream' },
     body: file
   });
   if (!res.ok) {
@@ -658,6 +661,24 @@ function setCustomAmt(v) {
     })(btns[i]);
   }
 })();
+
+// ── RESET FORM ───────────────────────────────────────────────────────────────
+function resetForm() {
+  selectedAmt = 0;
+  uploadedFile = null;
+  document.getElementById('customAmt').value = '';
+  document.querySelectorAll('.amt-btn').forEach(function(b){ b.classList.remove('selected'); });
+  document.getElementById('filePreview').innerHTML = '';
+  document.getElementById('filePreview').style.display = 'none';
+  document.getElementById('uploadArea').style.display = 'block';
+  var nameEl = document.getElementById('donorName');
+  var phoneEl = document.getElementById('donorPhone');
+  var emailEl = document.getElementById('donorEmail');
+  if (nameEl) nameEl.value = '';
+  if (phoneEl) phoneEl.value = '';
+  if (emailEl) emailEl.value = '';
+  goStep(1);
+}
 
 // ── STEPS ────────────────────────────────────────────────────────────────────
 function goStep(n) {
